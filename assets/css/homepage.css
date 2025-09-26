@@ -1,0 +1,591 @@
+/* Homepage Specific Styles - homepage.css */
+
+/* Global container for consistent spacing */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Hero Section */
+.hero {
+    background: var(--dark-color);
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+}
+
+/* Search Form */
+.search-form {
+    background: white;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 2rem;
+}
+
+.search-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-field i {
+    position: absolute;
+    left: 1rem;
+    color: var(--secondary-color);
+    z-index: 1;
+}
+
+.search-field input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid var(--border-color);
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    background-color: var(--background-color);
+    color: var(--text-primary);
+    transition: var(--transition);
+}
+
+.search-field input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.search-btn {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    white-space: nowrap;
+    height: fit-content;
+}
+
+.search-btn i {
+    margin-right: 0.5rem;
+}
+
+/* Popular Searches */
+.popular-searches {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.popular-searches span {
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.popular-searches a {
+    color: white;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+    transition: var(--transition);
+}
+
+.popular-searches a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Companies Hiring Section */
+.companies-hiring {
+    padding: 4rem 0;
+    background: var(--surface-color);
+    text-align: center;
+}
+
+.companies-hiring .section-title {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.companies-hiring .section-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 3rem;
+    color: var(--text-secondary);
+}
+
+.companies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+    text-align: left;
+}
+
+.company-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: var(--transition);
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.company-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.company-card:hover::before {
+    transform: scaleX(1);
+}
+
+.company-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    border-color: var(--primary-color);
+}
+
+.company-logo {
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.company-info {
+    flex: 1;
+}
+
+.company-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.company-industry {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.company-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+.company-location i {
+    color: var(--primary-color);
+}
+
+.company-overview {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.company-stats {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: var(--background-color);
+    border-radius: 0.5rem;
+}
+
+.stat {
+    text-align: center;
+    flex: 1;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    border-radius: 40px;
+}
+
+/* FIXED: Small + white numbers for company cards */
+.company-stats .stat-number {
+    display: block;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.pagination-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: scale(1.1);
+}
+
+.pagination-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.pagination-dots {
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.dot {
+    width: 16px;
+    height: 16px;
+    background: var(--border-color);
+    border-radius: 50%;
+    transition: var(--transition);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.dot:hover {
+    background: var(--secondary-color);
+    transform: scale(1.2);
+}
+
+.dot.active {
+    background: var(--primary-color);
+    transform: scale(1.3);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+}
+
+/* Stats Section */
+.stats {
+    padding: 3rem 0;
+    background-color: var(--surface-color);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    text-align: center;
+}
+
+.stat-item {
+    padding: 1rem;
+}
+
+/* FIXED: Large numbers only for global stats */
+.stats .stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Featured Jobs Section */
+.featured-jobs {
+    padding: 4rem 0;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+    color: var(--text-primary);
+}
+
+.jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+}
+
+/* Job Card */
+.job-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2rem;
+    transition: var(--transition);
+    position: relative;
+}
+
+.job-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.job-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.job-location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.job-salary {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--success-color);
+    margin-bottom: 1rem;
+}
+
+.job-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.tag {
+    background-color: var(--background-color);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border: 1px solid var(--primary-color);
+}
+
+.job-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.job-actions .btn {
+    flex: 1;
+    justify-content: center;
+}
+
+/* Responsive Design for Homepage */
+@media (max-width: 1024px) {
+    .companies-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .company-card {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.2rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+    
+    .search-inputs {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .search-btn {
+        width: 100%;
+    }
+    
+    .popular-searches {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .companies-hiring .section-title {
+        font-size: 2rem;
+    }
+    
+    .companies-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .company-card {
+        padding: 1.5rem;
+    }
+    
+    .company-stats {
+        gap: 1rem;
+    }
+    
+    .pagination {
+        gap: 1rem;
+    }
+    
+    .pagination-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 0.9rem;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    
+    .stats .stat-number {
+        font-size: 2rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .jobs-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .job-card {
+        padding: 1.5rem;
+    }
+    
+    .job-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero {
+        padding: 2rem 0;
+    }
+    
+    .hero-title {
+        font-size: 1.8rem;
+    }
+    
+    .search-form {
+        padding: 1rem;
+    }
+    
+    .companies-hiring {
+        padding: 2rem 0;
+    }
+    
+    .companies-hiring .section-title {
+        font-size: 1.8rem;
+    }
+    
+    .company-card {
+        padding: 1rem;
+    }
+    
+    .company-logo {
+        width: 60px;
+        height: 60px;
+        font-size: 1.2rem;
+    }
+    
+    .company-name {
+        font-size: 1.2rem;
+    }
+    
+    .company-stats {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+    
+    .pagination {
+        gap: 0.8rem;
+    }
+    
+    .pagination-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 0.8rem;
+    }
+    
+    .dot {
+        width: 12px;
+        height: 12px;
+    }
+    
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

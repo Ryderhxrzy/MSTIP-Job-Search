@@ -1,0 +1,107 @@
+<!-- Stats Section -->
+        <section class="stats">
+            <div class="container">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Active Jobs</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <div class="stat-label">Companies</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1M+</div>
+                        <div class="stat-label">Job Seekers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Jobs -->
+        <section class="featured-jobs">
+            <div class="container">
+                <h2 class="section-title">Featured Jobs</h2>
+                <div class="jobs-grid">
+                    <!-- Job Card 1 -->
+                    <div class="job-card">
+                        <div class="company-logo">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="job-info">
+                            <h3 class="job-title">Senior Frontend Developer</h3>
+                            <div class="company-name">TechCorp Inc.</div>
+                            <div class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                San Francisco, CA
+                            </div>
+                            <div class="job-salary">$120,000 - $150,000</div>
+                            <div class="job-tags">
+                                <span class="tag">React</span>
+                                <span class="tag">TypeScript</span>
+                                <span class="tag">Remote</span>
+                            </div>
+                        </div>
+                        <div class="job-actions">
+                            <button class="btn btn-outline">Save</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 2 -->
+                    <div class="job-card">
+                        <div class="company-logo">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="job-info">
+                            <h3 class="job-title">Product Marketing Manager</h3>
+                            <div class="company-name">StartupXYZ</div>
+                            <div class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                New York, NY
+                            </div>
+                            <div class="job-salary">$90,000 - $120,000</div>
+                            <div class="job-tags">
+                                <span class="tag">Marketing</span>
+                                <span class="tag">Strategy</span>
+                                <span class="tag">Full-time</span>
+                            </div>
+                        </div>
+                        <div class="job-actions">
+                            <button class="btn btn-outline">Save</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+
+                    <!-- Job Card 3 -->
+                    <div class="job-card">
+                        <div class="company-logo">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="job-info">
+                            <h3 class="job-title">Data Scientist</h3>
+                            <div class="company-name">DataFlow Analytics</div>
+                            <div class="job-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Austin, TX
+                            </div>
+                            <div class="job-salary">$110,000 - $140,000</div>
+                            <div class="job-tags">
+                                <span class="tag">Python</span>
+                                <span class="tag">Machine Learning</span>
+                                <span class="tag">Hybrid</span>
+                            </div>
+                        </div>
+                        <div class="job-actions">
+                            <button class="btn btn-outline">Save</button>
+                            <button class="btn btn-primary">Apply</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>

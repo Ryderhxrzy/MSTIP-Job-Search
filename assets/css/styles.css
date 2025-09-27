@@ -13,31 +13,60 @@
     position: relative;
 }
 
-.nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 70px;
-}
-
-/* Logo Styles */
 .nav-logo a {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     text-decoration: none;
     color: var(--text-primary);
-    font-size: 1.5rem;
-    font-weight: bold;
-    transition: var(--transition);
 }
 
-.nav-logo i {
-    color: var(--primary-color);
+.logo-img {
+    width: 50px;
+    height: auto;
+    flex-shrink: 0; /* prevents image from shrinking */
+    vertical-align: top; /* ensures consistent alignment */
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centers text block vertically relative to image */
+    line-height: 1;
+    gap: 0.1rem; /* consistent spacing between title and subtitle */
+}
+
+.logo-title {
     font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 0; /* removes default margins */
+    padding: 0; /* removes default padding */
+}
+
+.logo-subtitle {
+    font-size: 0.70rem;
+    font-weight: normal;
+    color: var(--text-secondary);
+    margin: 0; /* removes default margins */
+    padding: 0; /* removes default padding */
+}
+
+
+/* Align logo to left */
+.nav-logo {
+    flex: 0 0 auto; /* prevent stretching */
+}
+
+/* Adjust the navbar container to space between logo and menu */
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Logo left, menu right */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 70px;
 }
 
 /* Desktop Navigation Menu */
@@ -60,10 +89,9 @@
     transition: var(--transition);
 }
 
-/* Active link styles */
+/* Active link styles - same as hover */
 .nav-link.active {
     color: var(--primary-color);
-    font-weight: 600;
 }
 
 .nav-link.active::after {
@@ -82,9 +110,12 @@
     transition: var(--transition);
 }
 
-.nav-link:hover::after {
+.nav-link:hover::after,
+.nav-link.active::after {
     width: 100%;
 }
+
+
 
 .nav-link i {
     font-size: 0.9rem;
@@ -99,8 +130,30 @@
 
 .user-actions {
     display: flex;
-    gap: 0.5rem;
+    align-items: center; /* center vertically */
+    gap: 0.25rem;
+    font-weight: 500;
 }
+
+/* Make slash centered */
+.user-actions span {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-secondary);
+}
+
+/* Employer link (not button) */
+.employer-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.employer-link:hover {
+    color: var(--primary-color);
+}
+
 
 /* Button Styles */
 .btn {
@@ -135,8 +188,8 @@
 }
 
 .btn-outline:hover {
-    background-color: var(--button-hover);
-    color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--text-light);
 }
 
 .btn-block {
@@ -233,11 +286,10 @@
     position: relative;
 }
 
-/* Active mobile link styles */
+/* Active mobile link styles - same as hover */
 .mobile-nav-link.active {
     color: var(--primary-color);
-    font-weight: 600;
-    background-color: var(--button-hover);
+    background-color: var(--background-color);
 }
 
 .mobile-nav-link.active::after {
@@ -256,11 +308,13 @@
     transition: var(--transition);
 }
 
-.mobile-nav-link:hover::after {
+.mobile-nav-link:hover::after,
+.mobile-nav-link.active::after {
     width: calc(100% - 1.5rem);
 }
 
-.mobile-nav-link:hover {
+.mobile-nav-link:hover,
+.mobile-nav-link.active {
     background-color: var(--background-color);
     color: var(--primary-color);
 }

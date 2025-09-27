@@ -9,21 +9,35 @@ function initializeHeader() {
     const mobileMenu = document.querySelector('.mobile-menu');
     
     // Add click event to mobile menu toggle
-    mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+    }
     
     // Close mobile menu when clicking outside
     document.addEventListener('click', closeMobileMenuOnClickOutside);
     
     // Header scroll effect (optional)
     window.addEventListener('scroll', handleHeaderScroll);
+    
+    // Add click event to nav links to update active state
+    const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Update active state after a short delay to allow page navigation
+            setTimeout(setActiveLink, 100);
+        });
+    });
 }
 
 function setActiveLink() {
-    // Get current page path
+    // Get current page URL
+    const currentUrl = window.location.href;
     const currentPath = window.location.pathname;
+    const currentPage = currentPath.split('/').pop() || 'index.php';
     
-    // Remove trailing slash if present
-    const cleanPath = currentPath.endsWith('/') ? currentPath.slice(0, -1) : currentPath;
+    console.log('Current URL:', currentUrl);
+    console.log('Current Path:', currentPath);
+    console.log('Current Page:', currentPage);
     
     // Get all navigation links
     const navLinks = document.querySelectorAll('.nav-link, .mobile-nav-link');
@@ -35,23 +49,31 @@ function setActiveLink() {
     
     // Find and activate the current page link
     navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
-        const cleanLinkPath = linkPath.endsWith('/') ? linkPath.slice(0, -1) : linkPath;
+        const linkHref = link.getAttribute('href');
+        console.log('Checking link:', linkHref);
         
-        // Check if this link matches the current page
-        if (cleanPath === cleanLinkPath || 
-            (cleanPath === '' && cleanLinkPath === '/') ||
-            (cleanPath !== '/' && cleanPath.startsWith(cleanLinkPath) && cleanLinkPath !== '/')) {
+        // Extract filename from href
+        const linkPage = linkHref.split('/').pop() || 'index.php';
+        
+        // Check different matching conditions
+        if (currentUrl.includes(linkHref) || 
+            currentPath === linkHref ||
+            currentPage === linkPage ||
+            (currentPath === '/' && linkHref === 'index.php') ||
+            (currentPath === '' && linkHref === 'index.php')) {
+            
             link.classList.add('active');
+            console.log('Active link set:', linkHref);
         }
     });
     
     // Special case for home page
-    if (cleanPath === '' || cleanPath === '/') {
-        const homeLink = document.querySelector('.nav-logo a');
-        if (homeLink) {
-            // You can add visual indication for home if needed
-        }
+    if (currentPath === '/' || currentPath === '' || currentPage === 'index.php') {
+        const homeLinks = document.querySelectorAll('[href="index.php"], [href="/"]');
+        homeLinks.forEach(link => {
+            link.classList.add('active');
+        });
+        console.log('Home page active');
     }
 }
 
@@ -85,5 +107,8 @@ function handleHeaderScroll() {
     }
 }
 
-// Update active link when navigating (for single page applications)
+// Update active link when navigating
 window.addEventListener('popstate', setActiveLink);
+
+// Also update when page loads completely
+window.addEventListener('load', setActiveLink);

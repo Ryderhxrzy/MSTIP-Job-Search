@@ -8,12 +8,18 @@
 
 /* CSS Variables for Theme Management */
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
-    --dark-color: #052681;
-    --button-hover: #8a8f9d5b;
+    --primary-color: #0e0c5b;
+    --primary-hover: #0b0a48;
+    --primary-light: #2b28a7;
+
+    --accent-color: #fdb80a;    
+    --accent-hover: #e6a600;         
     --secondary-color: #64748b;
-    --accent-color: #f59e0b;
+
+    --dark-color: #0e0c5b;
+    --news-background: rgba(2, 14, 42, 0.795);
+    --button-hover: #355187;
+    --secondary-color: #64748b;
     --success-color: #10b981;
     --background-color: #ffffff;
     --surface-color: #f8fafc;

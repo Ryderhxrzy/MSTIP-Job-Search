@@ -7,11 +7,13 @@
 <header class="header">
     <nav class="navbar">
         <div class="nav-container">
-            <!-- Logo -->
             <div class="nav-logo">
                 <a href="/">
-                    <i class="fas fa-briefcase"></i>
-                    <span>JobFinder</span>
+                    <img src="assets/images/logo.png" alt="MSTIP Logo" class="logo-img">
+                    <div class="logo-text">
+                        <span class="logo-title">MSTIP</span>
+                        <span class="logo-subtitle">Job Search</span>
+                    </div>
                 </a>
             </div>
 
@@ -37,6 +39,11 @@
                         About Us
                     </a>
                 </li>
+                 <li class="nav-item">
+                    <a href="/about" class="nav-link" data-page="about">
+                        Contact
+                    </a>
+                </li>
             </ul>
 
             <!-- Right Side Actions -->
@@ -44,6 +51,8 @@
                 <!-- User Actions -->
                 <div class="user-actions">
                     <a href="/login" class="btn btn-outline">Log In</a>
+                    <span> &nbsp;/&nbsp; </span>
+                    <a href="/employer" class="nav-links employer-link">Employer Page</a>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -70,12 +79,16 @@
                 <a href="/about" class="mobile-nav-link" data-page="about">
                     About Us
                 </a>
+                <a href="/about" class="mobile-nav-link" data-page="about">
+                    Contact
+                </a>
                 <div class="mobile-user-actions">
                     <a href="/login" class="btn btn-outline btn-block">Log In</a>
+                    <a href="/employer" class="nav-links employer-link">Employer Page</a>
                 </div>
             </div>
         </div>
     </nav>
 </header>
 
-<script src="../assets/js/header.js"></script>
+<script src="../assets/js/script.js"></script>

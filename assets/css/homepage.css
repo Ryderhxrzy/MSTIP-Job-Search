@@ -208,7 +208,7 @@
 
 .companies-pagination-wrapper .pagination-btn {
     position: absolute;
-    top: 40%;
+    top: 38%;
     width: 48px;
     height: 48px;
     font-size: 1.2rem;
@@ -216,13 +216,17 @@
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: var(--primary-color);
-    color: var(--text-light);
-    border: none;
+    background: var(--card-color);
+    color: var(--primary-color);
+    border: 2px solid var(--primary-border); /* match company card */
     cursor: pointer;
-    transition: var(--transition);
     z-index: 2;
 }
+
+.companies-pagination-wrapper .pagination-btn:hover {
+    background: var(--card-hover);
+}
+
 
 .companies-pagination-wrapper .pagination-btn.prev {
     left: -24px;
@@ -230,11 +234,6 @@
 
 .companies-pagination-wrapper .pagination-btn.next {
     right: -24px;
-}
-
-.companies-pagination-wrapper .pagination-btn:hover {
-    background: var(--primary-hover);
-    transform: scale(1.1);
 }
 
 .pagination-btn.hidden {
@@ -247,51 +246,74 @@
     gap: 2rem;
     margin-bottom: 3rem;
     text-align: left;
-    flex: 1;
 }
 
 .company-card {
-    background: white;
-    border: 1px solid var(--border-color);
+    background: var(--card-color);
+    border: 2px solid var(--primary-border);
     border-radius: 1rem;
     padding: 2rem;
     cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     position: relative;
     overflow: hidden;
     min-height: 280px;
 }
 
-.company-card::before {
-    content: '';
+.company-card::after {
+    content: "";
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: var(--primary-hover);
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
+    right: 0;
+    width: 40%;
+    height: 100%;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%230e0c5b' fill-opacity='0.05'/%3E%3C/svg%3E") repeat;
+    background-size: 24px 24px;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    pointer-events: none;
+    z-index: 0;
 }
 
-.company-card:hover::before {
-    transform: scaleX(1);
+.company-card * {
+    position: relative;
+    z-index: 1;
 }
 
 .company-card:hover {
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     border-color: var(--primary-color);
+}
+
+/* Company Star Icon */
+.company-star {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
+    color: var(--accent-color);
+    font-size: 1.2rem;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.company-card:hover .company-star {
+    opacity: 1;
+}
+
+.star-number {
+    color: var(--primary-color);
 }
 
 .company-hover-arrow {
     position: absolute;
-    top: 1rem;
+    top: 3.5rem;
     right: 1rem;
-    font-size: 1.2rem;
+    font-size: 1rem;
     color: var(--primary-color);
     opacity: 0;
     transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
+    z-index: 2;
 }
 
 .company-card:hover .company-hover-arrow {
@@ -302,7 +324,7 @@
 .job-counts {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 1rem;
+    margin-top: 1.5rem;
 }
 
 .job-count-normal,
@@ -335,15 +357,18 @@
     height: 70px;
     margin-bottom: 1.5rem;
     border-radius: 1rem;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: white;
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    font-size: 1.5rem;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
+
+.company-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 
 .company-info {
     flex: 1;
@@ -358,7 +383,7 @@
 
 .company-industry {
     font-size: 0.9rem;
-    color: var(--primary-color);
+    color: var(--text-secondary);
     font-weight: 600;
     margin-bottom: 0.5rem;
     text-transform: uppercase;
@@ -393,26 +418,7 @@
     gap: 1rem;
 }
 
-.pagination-btn {
-    background: var(--primary-color);
-    color: var(--text-light);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: var(--transition);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-}
 
-.pagination-btn:hover:not(:disabled) {
-    background: var(--primary-hover);
-    transform: scale(1.1);
-}
 
 .pagination-btn:disabled {
     cursor: not-allowed;
@@ -429,11 +435,10 @@
 .dot {
     width: 12px;
     height: 12px;
-    background: var(--primary-hover);
+    border: 1px solid var(--primary-color);
     border-radius: 50%;
     transition: var(--transition);
     cursor: pointer;
-    border: 2px solid transparent;
 }
 
 .dot:hover {
@@ -597,56 +602,47 @@
     opacity: 0.9;
 }
 
-.social-login-buttons {
+/* Newsletter Email Login */
+.email-login-form {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1rem;
-}
-
-.social-login-row {
-    display: flex;
-    align-items: center;
     justify-content: center;
     gap: 1rem;
     flex-wrap: wrap;
     margin-bottom: 1rem;
 }
 
-.or-separator {
-    color: white;
-    opacity: 0.8;
-    font-size: 1rem;
+.email-input-wrapper {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 700px;
 }
 
-.btn-social {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+.email-input-wrapper input {
+    flex: 1;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid var(--primary-border);
+    background-color: transparent;
+    font-size: 1rem;
+    outline: none;
+    color: white;
+}
+
+.email-input-wrapper button {
     padding: 1rem 1.5rem;
     font-size: 1rem;
-    font-weight: 500;
     border-radius: 0.5rem;
-    border: none;
-    text-decoration: none;
-    color: var(--text-light);
-    border: 1px solid var(--border-color);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    justify-content: center;
-    flex: 1;
-    min-width: 140px;
+    background-color: var(--accent-color);
+    color: white;
+    cursor: pointer;
 }
 
-.btn-social:hover {
-    background-color: #0c46b9b2;
-    transform: translateY(-2px);
+.email-input-wrapper button:hover {
+    background: var(--accent-hover);
 }
 
-.social-icon {
-    width: 20px;
-    height: 20px;
-}
 
 .newsletter-hint {
     font-size: 0.9rem;
@@ -982,6 +978,17 @@
         padding: 0.2rem 0.4rem;
     }
     
+    .company-star {
+        font-size: 1.1rem;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+    
+    .company-hover-arrow {
+        top: 3rem;
+        right: 0.75rem;
+    }
+    
     .pagination {
         gap: 0.6rem;
         margin-top: 1rem;
@@ -1101,6 +1108,17 @@
     
     .company-name {
         font-size: 1rem;
+    }
+    
+    .company-star {
+        font-size: 1rem;
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .company-hover-arrow {
+        top: 2.75rem;
+        right: 0.5rem;
     }
     
     .job-card {

@@ -89,7 +89,6 @@
 .footer-about .logo-img + .logo-text {
   display: inline-flex;
   vertical-align: middle;
-  margin-left: 0.75rem;
 }
 
 .footer-about .logo-img {
@@ -161,9 +160,16 @@
 
 /* ---------------- Responsive Footer ---------------- */
 @media (max-width: 768px) {
+  .footer-logo-wrapper {
+    flex-direction: column;     /* stack logo + text */
+    align-items: center;        /* center horizontally */
+    text-align: center;
+  }
+  
   .footer-container {
-    grid-template-columns: 1fr; /* stack columns vertically */
-    text-align: center; /* center content */
+    flex-direction: column;     /* stack logo + text */
+    align-items: center;        /* center horizontally */
+    text-align: center;
   }
 
   .footer-links ul,
@@ -177,7 +183,7 @@
 
   .footer-about .logo-img {
     display: block;
-    margin: 0 auto 0.5rem;
+    
   }
 
   .footer-about .logo-text {

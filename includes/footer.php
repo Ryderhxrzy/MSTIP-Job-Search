@@ -4,7 +4,7 @@
     <!-- Logo + About -->
     <div class="footer-about">
       <div class="footer-logo-wrapper" style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;">
-        <img src="assets/images/logo.png" alt="MSTIP Logo" class="logo-img">
+        <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
         <div class="logo-text">
           <span class="logo-title">MSTIP</span>
           <span class="logo-subtitle">Job Search</span>

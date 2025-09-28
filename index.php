@@ -39,7 +39,7 @@
                                 <i class="fas fa-map-marker-alt"></i>
                                 <input type="text" placeholder="City, state, or remote">
                             </div>
-                            <button class="btn btn-primary search-btn">
+                            <button class="btn-primary search-btn">
                                 <i class="fas fa-search"></i> Search Jobs
                             </button>
                         </div>
@@ -92,26 +92,12 @@
                 <h2 class="newsletter-title">Login to Your JobFinder Account</h2>
                 <p class="newsletter-subtitle">Access your personalized job alerts, saved applications, and career dashboard quickly and securely.</p>
 
-                <div class="social-login-row">
-                    <a href="#" class="btn-social btn-google">
-                        <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 533.5 544.3">
-                            <path fill="#4285F4" d="M533.5 278.4c0-18.9-1.5-37.2-4.4-55H272v104.5h146.9c-6.3 34-25 62.9-53.2 82.2v68.2h85.9c50.2-46.3 79.9-114.7 79.9-199.9z"/>
-                            <path fill="#34A853" d="M272 544.3c72.6 0 133.6-23.9 178.1-65l-85.9-68.2c-23.8 16-54.5 25.5-92.2 25.5-70.9 0-131-47.8-152.4-112.3H33.9v70.8C77.9 486.5 170 544.3 272 544.3z"/>
-                            <path fill="#FBBC05" d="M119.6 322.3c-10.4-31-10.4-64.8 0-95.8v-70.8H33.9C12 197.4 0 232.6 0 272s12 74.6 33.9 104.3l85.7-70.9z"/>
-                            <path fill="#EA4335" d="M272 107.7c39.5-.6 77.4 14 106 41.2l79.3-79.3C406.1 24 344 0 272 0 170 0 77.9 57.8 33.9 145.2l85.7 70.8C141 155.5 201.1 107.7 272 107.7z"/>
-                        </svg>
-                        Continue with Google
-                    </a>
-
-                    <span class="or-separator">or</span>
-
-                    <a href="#" class="btn-social btn-linkedin">
-                        <svg class="social-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                            <path fill="#0077B5" d="M100.28 448H7.4V148.9h92.88zm-46.44-340.5C24.06 107.5 0 83.4 0 53.2S24.06-1 53.84-1 107.7 23.1 107.7 53.2s-24.06 54.3-54.44 54.3zM447.9 448h-92.68V302.4c0-34.7-12.4-58.3-43.34-58.3-23.63 0-37.68 15.9-43.88 31.3-2.26 5.5-2.83 13.1-2.83 20.7V448h-92.68s1.23-266.5 0-294.1h92.68v41.6c12.3-19 34.3-46 83.5-46 60.9 0 106.6 39.7 106.6 124.9V448z"/>
-                        </svg>
-                        Continue with LinkedIn
-                    </a>
-                </div>
+                <form class="email-login-form">
+                    <div class="email-input-wrapper">
+                        <input type="email" placeholder="Enter your email" required>
+                        <button type="submit" class="btn-primary">Sign in</button>
+                    </div>
+                </form>
 
                 <p class="newsletter-hint">
                     Don't have an account? 
@@ -157,14 +143,17 @@
     const companyCard = document.createElement('div');
     companyCard.className = 'company-card';
     companyCard.innerHTML = `
-        <div class="company-logo">${company.logo}</div>
+        <div class="company-star">
+            <span class="star-number">5</span>
+            <i class="fas fa-star"></i>
+        </div>
+        <div class="company-logo">
+            <img src="assets/images/background1.jpeg" alt="Placeholder Logo">
+        </div>
+
         <div class="company-info">
             <h3 class="company-name">${company.name}</h3>
             <p class="company-industry">${company.industry}</p>
-            <p class="company-location">
-                <i class="fas fa-map-marker-alt"></i>
-                ${company.location}
-            </p>
             <div class="job-counts">
                 <p class="job-count-normal">
                     <i class="fas fa-user"></i> ${company.jobsCount} Jobs

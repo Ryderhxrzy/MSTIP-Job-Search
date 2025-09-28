@@ -892,7 +892,8 @@
     
     .search-btn {
         padding: 0.875rem 1rem;
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        font-weight: 550;
     }
     
     .popular-searches {

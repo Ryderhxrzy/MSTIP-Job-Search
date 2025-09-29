@@ -1,7 +1,3 @@
-.headers {
-  background: linear-gradient(135deg, var(--surface-color) 0%, #f9fafc 100%);
-}
-
 .error-message {
   font-size: 0.85rem;
   margin-top: 0.3rem;
@@ -9,20 +5,20 @@
 }
 
 .form-group input.error {
-  border-color: red !important;
+  border: 2px solid var(--error-color) !important;
 }
 
 .form-group input.success {
-  border-color: green !important;
+  border: 2px solid var(--success-color) !important;
 }
 
 .error-message.error-text {
-  color: red;
+  color: var(--error-color);
   display: block;
 }
 
 .error-message.success-text {
-  color: green;
+  color: var(--success-color);
   display: block;
 }
 
@@ -31,8 +27,65 @@
   justify-content: center;
   align-items: center;
   padding: 3rem 1rem;
-  background: linear-gradient(135deg, var(--surface-color) 0%, #f9fafc 100%);
   min-height: 100vh;
+  background-color: #f9fafc; /* fallback color */
+  
+  /* Accessible diagonal stripe pattern */
+  background-image: 
+    repeating-linear-gradient(
+      135deg,
+      #e0e7ff 0px,
+      #e0e7ff 2px,
+      transparent 2px,
+      transparent 20px
+    ),
+    linear-gradient(180deg, #f9fafc 0%, #e9efff 100%);
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--text-primary);
+    margin-bottom: 18px;
+}
+
+.logo-img {
+    width: 50px;
+    height: auto;
+    flex-shrink: 0; /* prevents image from shrinking */
+    vertical-align: top; /* ensures consistent alignment */
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centers text block vertically relative to image */
+    line-height: 1;
+    gap: 0.1rem; /* consistent spacing between title and subtitle */
+}
+
+.logo-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 0; /* removes default margins */
+    padding: 0; /* removes default padding */
+}
+
+.logo-subtitle {
+    font-size: 0.70rem;
+    font-weight: normal;
+    color: var(--text-secondary);
+    margin: 0; /* removes default margins */
+    padding: 0; /* removes default padding */
+}
+
+
+/* Align logo to left */
+.logo {
+    flex: 0 0 auto; /* prevent stretching */
 }
 
 .login-box {
@@ -45,6 +98,7 @@
 }
 
 .login-title {
+  margin-top: 0.5rem;
   font-size: 1.9rem;
   font-weight: bold;
   color: var(--text-primary);
@@ -72,15 +126,17 @@
 .form-group input {
   width: 100%;
   padding: 0.9rem 1rem;
-  border: 2px solid #ddd;
+  border: 2px solid var(--primary-border);
   border-radius: 0.5rem;
   font-size: 1rem;
   box-sizing: border-box;
+  transition: var(--transition);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #0e0c5b;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* Password group fix */
@@ -178,7 +234,7 @@
   text-decoration: underline;
 }
 
-.employer-link {
+.employer-links {
   background-color: var(--accent-color);
   border: 2px solid var(--primary-color);
   border-radius: 0.5rem;
@@ -191,14 +247,17 @@
   cursor: pointer;
 }
 
-.employer-link:hover {
+.employer-links:hover {
   background-color: var(--accent-hover);
 }
 
-.employer-link a {
+.employer-links a {
   color: var(--text-primary);
   font-weight: 600;
-  text-decoration: none;
+   display: block;      /* make it fill the parent */
+    width: 100%;         /* fill the entire width */
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Divider with OR */
@@ -255,4 +314,143 @@
     align-items: flex-start;
     gap: 0.5rem;
   }
+}
+
+@media (max-width: 480px) {
+  .login-container {
+    padding: 2rem 1rem;
+  }
+
+  .login-box {
+    width: 100%; /* make login box full width */
+    max-width: 100%;
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+    border: 2px solid var(--primary-border);
+  }
+
+  /* Title adjustments */
+  .login-title {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .login-subtitle {
+    font-size: 0.95rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* Form adjustments */
+  .login-form {
+    gap: 0.8rem;
+  }
+
+  .form-options {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  /* Divider with "or" separation */
+  .divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin: 1.5rem 0;
+    width: 100%;
+  }
+
+  .divider::before,
+  .divider::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ccc;
+  }
+
+  .divider:not(:empty)::before {
+    margin-right: 0.75em;
+  }
+
+  .divider:not(:empty)::after {
+    margin-left: 0.75em;
+  }
+
+  /* Employer button full width */
+  .employer-links {
+    width: 100%;
+    display: block;
+    text-align: center;
+  }
+}
+
+/* ================= Why Choose MSTIP Section ================= */
+.why-mstip {
+    background-color: #eef3ff;
+    padding: 3rem 1rem;
+    text-align: center;
+}
+
+.why-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.why-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.why-subtitle {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.why-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.why-card {
+    background: #fff;
+    border-radius: 1rem;
+    border: 2px solid var(--primary-border);
+    padding: 2rem 1rem;
+    width: 300px;
+}
+
+.why-card i {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.why-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.why-card p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+/* Responsive for small screens */
+@media (max-width: 768px) {
+    .why-cards {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .why-card {
+        width: 90%;
+    }
 }

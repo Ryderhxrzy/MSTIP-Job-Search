@@ -21,13 +21,13 @@
                     <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>
-                        <span class="logo-subtitle">Job Search</span>
+                        <span class="logo-subtitle">Seek Talent</span>
                     </div>
                 </a>
             </div>
             <hr>
         <h2 class="login-title">Welcome Back</h2>
-        <p class="login-subtitle">Sign in to find your next opportunity</p>
+        <p class="login-subtitle">Sign in to manage your job postings</p>
 
         <!-- Enhanced Login Form -->
         <form class="login-form" id="loginForm" novalidate>
@@ -56,17 +56,44 @@
         </form>
 
         <p class="register-text">
-            Don't have an account? <a href="register.php" class="register-links">Create account</a>
+            Don't have an account? <a href="employer-register.php" class="register-links">Create account</a>
         </p>
         <div class="divider"><span>or</span></div>
         <p class="employer-links">
-            <a href="employer-login.php">
+            <a href="login.php">
             <i class="fas fa-building" style="margin-right: 0.5rem;"></i>
-            Are you an Employer?
+            Are you an Job Searcher?
             </a>
         </p>
         </div>
     </div>
-    <script src="assets/js/log-script.js"></script>
+    <!-- ================= Why Choose MSTIP for Employers ================= -->
+<section class="why-mstip">
+    <div class="why-container">
+        <h2 class="why-title">Start Hiring in 3 Easy Steps</h2>
+        <p class="why-subtitle">MSTIP makes it simple for employers to find the right talent quickly.</p>
+        <div class="why-cards">
+            <div class="why-card">
+                <i class="fas fa-user-plus fa-2x"></i>
+                <h3>1. Register Online</h3>
+                <p>Create your free employer account in just minutes and get access to hiring tools.</p>
+            </div>
+            <div class="why-card">
+                <i class="fas fa-briefcase fa-2x"></i>
+                <h3>2. Post a Job</h3>
+                <p>Publish your job listings and reach thousands of qualified job seekers instantly.</p>
+            </div>
+            <div class="why-card">
+                <i class="fas fa-filter fa-2x"></i>
+                <h3>3. Sort Applicants</h3>
+                <p>Review applications, filter candidates, and connect with the right talent fast.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+    <script src="assets/js/log-employer-script.js"></script>
 </body>
 </html>

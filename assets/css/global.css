@@ -23,6 +23,9 @@
 
     --asterisk: #ff0101;
 
+    --error-color: rgb(207, 0, 0);
+    --success-color: rgb(0, 72, 0);
+
     --dark-color: #0e0c5b;
     --news-background: rgba(2, 14, 42, 0.795);
     --button-hover: #355187;

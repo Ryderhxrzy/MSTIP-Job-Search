@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="assets/css/styles.css">
     <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="stylesheet" href="assets/css/footer.css">
+    <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <?php include_once('includes/header.php'); ?>

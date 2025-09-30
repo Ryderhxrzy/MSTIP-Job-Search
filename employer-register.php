@@ -21,7 +21,7 @@
                     <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>
-                        <span class="logo-subtitle">Seek Talent</span>
+                        <span class="logo-subtitle">Seek Employee</span>
                     </div>
                 </a>
             </div>

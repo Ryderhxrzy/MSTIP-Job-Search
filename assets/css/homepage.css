@@ -622,7 +622,7 @@
     padding: 1rem;
     border-radius: 0.5rem;
     border: 2px solid var(--primary-border);
-    background-color: transparent;
+    background-color: rgba(255, 255, 255, 0.15);
     font-size: 1rem;
     outline: none;
     color: white;
@@ -707,6 +707,22 @@
 @media (max-width: 768px) {
     .container {
         padding: 0 1rem;
+    }
+
+    .newsletter {
+        padding: 2rem 1rem;
+    }
+    .newsletter-title {
+        font-size: 1.5rem;
+    }
+    .hero-content {
+        padding: 1.5rem 0.5rem;
+    }
+    .email-input-wrapper {
+        flex-direction: column; 
+    }
+    .email-input-wrapper button {
+        width: 100%;
     }
     
     .hero {
@@ -863,6 +879,24 @@
         padding: 0 0.75rem;
     }
     
+.newsletter-title {
+    font-size: 1.3rem;
+  }
+  .newsletter-subtitle {
+    font-size: 1rem;
+  }
+  .email-input-wrapper input {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+  .email-input-wrapper button {
+    font-size: 0.9rem;
+    padding: 0.8rem;
+  }
+  .stat-item h3 {
+    font-size: 1.2rem;
+  }
+
     .hero {
         padding: 2rem 0;
         text-align: left;

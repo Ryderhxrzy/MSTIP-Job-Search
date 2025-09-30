@@ -12,7 +12,7 @@
                     <img src="../assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>
-                        <span class="logo-subtitle">Seek Talent</span>
+                        <span class="logo-subtitle">Seek Employee</span>
                     </div>
                 </a>
             </div>
@@ -25,22 +25,22 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/pricing" class="nav-link" data-page="pricing">
+                    <a href="how-it-works.php" class="nav-link" data-page="how-it-works">
                         How It Works
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/how-it-works" class="nav-link" data-page="how-it-works">
+                    <a href="employer-advice.php" class="nav-link" data-page="pricing">
                         Employer Advice
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/about" class="nav-link" data-page="about">
+                    <a href="about-us.php" class="nav-link" data-page="about">
                         About Us
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/contact" class="nav-link" data-page="contact">
+                    <a href="contact.php" class="nav-link" data-page="contact">
                         Contact
                     </a>
                 </li>
@@ -50,7 +50,7 @@
             <div class="nav-actions">
                 <!-- User Actions -->
                 <div class="user-actions">
-                    <a href="login.php" class="btn btn-outline">Log In</a>
+                    <a href="../employer-login.php" class="btn btn-outline">Log In</a>
                     <span> &nbsp;/&nbsp; </span>
                     <a href="register.php" class="nav-links employer-link">Post a Job</a>
                 </div>
@@ -70,16 +70,16 @@
                 <a href="employer-home.php" class="mobile-nav-link" data-page="post-job">
                     Home
                 </a>
-                <a href="/pricing" class="mobile-nav-link" data-page="pricing">
-                    Employer Advice
-                </a>
-                <a href="/how-it-works" class="mobile-nav-link" data-page="how-it-works">
+                 <a href="how-it-works.php" class="mobile-nav-link" data-page="how-it-works">
                     How It Works
                 </a>
-                <a href="/about" class="mobile-nav-link" data-page="about">
+                <a href="employer-advice.php" class="mobile-nav-link" data-page="pricing">
+                    Employer Advice
+                </a>
+                <a href="about-us.php" class="mobile-nav-link" data-page="about">
                     About Us
                 </a>
-                <a href="/contact" class="mobile-nav-link" data-page="contact">
+                <a href="contact.php" class="mobile-nav-link" data-page="contact">
                     Contact
                 </a>
                 <div class="mobile-user-actions">

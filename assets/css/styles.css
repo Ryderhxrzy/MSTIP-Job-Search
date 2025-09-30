@@ -1,15 +1,33 @@
-/* Header Styles */
+/* ============================= */
+/* HEADER BASE STYLES            */
+/* ============================= */
 .header {
     background-color: var(--surface-color);
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--primary-border);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: var(--shadow);
 }
 
 .navbar {
     position: relative;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    height: 70px;
+}
+
+/* ============================= */
+/* LOGO STYLES                   */
+/* ============================= */
+.nav-logo {
+    flex: 0 0 auto;
 }
 
 .nav-logo a {
@@ -23,52 +41,37 @@
 .logo-img {
     width: 50px;
     height: auto;
-    flex-shrink: 0; /* prevents image from shrinking */
-    vertical-align: top; /* ensures consistent alignment */
+    flex-shrink: 0;
+    vertical-align: top;
 }
 
 .logo-text {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* centers text block vertically relative to image */
+    justify-content: center;
     line-height: 1;
-    gap: 0.1rem; /* consistent spacing between title and subtitle */
+    gap: 0.1rem;
 }
 
 .logo-title {
     font-size: 1.8rem;
     font-weight: bold;
     color: var(--text-primary);
-    margin: 0; /* removes default margins */
-    padding: 0; /* removes default padding */
+    margin: 0;
+    padding: 0;
 }
 
 .logo-subtitle {
     font-size: 0.70rem;
     font-weight: normal;
     color: var(--text-secondary);
-    margin: 0; /* removes default margins */
-    padding: 0; /* removes default padding */
+    margin: 0;
+    padding: 0;
 }
 
-
-/* Align logo to left */
-.nav-logo {
-    flex: 0 0 auto; /* prevent stretching */
-}
-
-/* Adjust the navbar container to space between logo and menu */
-.nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Logo left, menu right */
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-    height: 70px;
-}
-
-/* Desktop Navigation Menu */
+/* ============================= */
+/* DESKTOP NAVIGATION MENU       */
+/* ============================= */
 .nav-menu {
     display: flex;
     list-style: none;
@@ -88,16 +91,15 @@
     transition: var(--transition);
 }
 
-/* Active link styles - same as hover */
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
 .nav-link.active {
     color: var(--primary-color);
 }
 
-.nav-link.active::after {
-    width: 100%;
-}
-
-/* Hover underline effect */
+/* Hover/Active underline effect */
 .nav-link::after {
     content: '';
     position: absolute;
@@ -114,13 +116,13 @@
     width: 100%;
 }
 
-
-
 .nav-link i {
     font-size: 0.9rem;
 }
 
-/* Right Side Actions */
+/* ============================= */
+/* USER ACTIONS & BUTTONS        */
+/* ============================= */
 .nav-actions {
     display: flex;
     align-items: center;
@@ -129,19 +131,18 @@
 
 .user-actions {
     display: flex;
-    align-items: center; /* center vertically */
+    align-items: center;
     gap: 0.25rem;
     font-weight: 500;
 }
 
-/* Make slash centered */
 .user-actions span {
     display: inline-flex;
     align-items: center;
     color: var(--text-secondary);
 }
 
-/* Employer link (not button) */
+/* Employer Link */
 .employer-link {
     background-color: var(--accent-color);
     border: 2px solid var(--primary-color);
@@ -158,8 +159,9 @@
     color: var(--primary-color);
 }
 
-
-/* Button Styles */
+/* ============================= */
+/* BUTTON STYLES                 */
+/* ============================= */
 .btn {
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
@@ -208,7 +210,9 @@
     margin-bottom: 0.5rem;
 }
 
-/* Mobile Menu Toggle */
+/* ============================= */
+/* MOBILE MENU TOGGLE            */
+/* ============================= */
 .mobile-menu-toggle {
     display: none;
     flex-direction: column;
@@ -244,7 +248,7 @@
     top: 20px;
 }
 
-/* Active state for mobile menu toggle */
+/* Hamburger to X animation */
 .mobile-menu-toggle.active span:nth-child(1) {
     transform: rotate(45deg);
     top: 13.5px;
@@ -259,7 +263,9 @@
     top: 13.5px;
 }
 
-/* Mobile Menu */
+/* ============================= */
+/* MOBILE MENU                   */
+/* ============================= */
 .mobile-menu {
     display: none;
     position: absolute;
@@ -297,17 +303,13 @@
     position: relative;
 }
 
-/* Active mobile link styles - same as hover */
+.mobile-nav-link:hover,
 .mobile-nav-link.active {
-    color: var(--primary-color);
     background-color: var(--background-color);
+    color: var(--primary-color);
 }
 
-.mobile-nav-link.active::after {
-    width: calc(100% - 1.5rem);
-}
-
-/* Mobile hover underline effect */
+/* Mobile link underline effect */
 .mobile-nav-link::after {
     content: '';
     position: absolute;
@@ -324,22 +326,29 @@
     width: calc(100% - 1.5rem);
 }
 
-.mobile-nav-link:hover,
-.mobile-nav-link.active {
-    background-color: var(--background-color);
-    color: var(--primary-color);
-}
-
 .mobile-user-actions {
     margin-top: 1rem;
     padding-top: 1rem;
     border-top: 1px solid var(--border-color);
 }
 
+/* ============================= */
+/* RESPONSIVE: DESKTOP           */
+/* ============================= */
+@media (min-width: 901px) {
+    .mobile-menu {
+        display: none !important;
+    }
+    
+    .mobile-menu-toggle {
+        display: none;
+    }
+}
 
-
-/* Responsive Design */
-@media (max-width: 768px) {
+/* ============================= */
+/* RESPONSIVE: TABLET & MOBILE   */
+/* ============================= */
+@media (max-width: 950px) {
     .nav-menu,
     .user-actions {
         display: none;
@@ -356,23 +365,21 @@
     }
 }
 
-/* Desktop - ensure mobile menu is hidden */
-@media (min-width: 769px) {
-    .mobile-menu {
-        display: none !important;
+/* ============================= */
+/* RESPONSIVE: SMALL MOBILE      */
+/* ============================= */
+@media (max-width: 480px) {
+    .logo-title {
+        font-size: 1.5rem;
     }
     
-    .mobile-menu-toggle {
-        display: none;
+    .logo-subtitle {
+        font-size: 0.65rem;
     }
-}
-
-/* Mobile adjustments for login */
-@media (max-width: 480px) {
-  /* Employer button full width */
-  .employer-link {
-    width: 100%;
-    display: block;
-    text-align: center;
-  }
+    
+    .employer-link {
+        width: 100%;
+        display: block;
+        text-align: center;
+    }
 }

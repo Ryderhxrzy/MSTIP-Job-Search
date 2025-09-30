@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seamless Logo Marquee</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f5f5f5;
+      margin: 0;
+    }
+
+    .marquee {
+      position: relative;
+      width: 100%;
+      max-width: 1000px;
+      overflow: hidden;
+      background: #fff;
+      border: 2px solid #ddd;
+      padding: 20px 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: scroll 20s linear infinite;
+    }
+
+    .marquee-track img {
+      width: 100px;
+      height: auto;
+      margin: 0 30px;
+      object-fit: contain;
+      transition: transform 0.3s ease;
+    }
+
+    .marquee-track img:hover {
+      transform: scale(1.1);
+    }
+
+    @keyframes scroll {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="marquee">
+    <div class="marquee-track">
+      <!-- Set 1 -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo 1">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="Logo 2">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Logo 3">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Javascript_Logo.png" alt="Logo 4">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="Logo 5">
+
+      <!-- Set 2 (duplicate for seamless loop) -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo 1">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/61/HTML5_logo_and_wordmark.svg" alt="Logo 2">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Logo 3">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/3b/Javascript_Logo.png" alt="Logo 4">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/JavaScript-logo.png" alt="Logo 5">
+    </div>
+  </div>
+</body>
+</html>

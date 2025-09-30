@@ -7,7 +7,7 @@
         <img src="../assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
         <div class="logo-text">
           <span class="logo-title">MSTIP</span>
-          <span class="logo-subtitle">Seek Talent</span>
+                        <span class="logo-subtitle">Seek Employee</span>
         </div>
       </div>
       <p>
@@ -21,10 +21,10 @@
       <h3>Quick Links</h3>
       <ul>
         <li><a href="employer-home.php">Home</a></li>
-        <li><a href="#">Employer Advice</a></li>
-        <li><a href="#">How it works</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="how-it-works.php">How it works</a></li>
+        <li><a href="employer-advice.php">Employer Advice</a></li>
+        <li><a href="about-us.php">About Us</a></li>
+        <li><a href="contact.php">Contact</a></li>
       </ul>
     </div>
 

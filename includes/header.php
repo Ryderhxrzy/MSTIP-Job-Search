@@ -26,7 +26,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="/companies" class="nav-link" data-page="companies">
-                        Companies
+                        Employer
                     </a>
                 </li>
                 <li class="nav-item">
@@ -71,7 +71,7 @@
                     Find Jobs
                 </a>
                 <a href="/companies" class="mobile-nav-link" data-page="companies">
-                    Companies
+                    Employer
                 </a>
                 <a href="/post-job" class="mobile-nav-link" data-page="post-job">
                     Searcher Advice

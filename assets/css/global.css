@@ -19,7 +19,8 @@
     --card-hover: rgb(232, 232, 232);
     
     --accent-color: #ffb700;    
-    --accent-hover: #f0ac00;         
+    --accent-hover: #f0ac00;   
+    --circle-decorative: #ffb70018;    
 
     --asterisk: #ff0101;
 
@@ -30,6 +31,8 @@
     --news-background: rgba(2, 14, 42, 0.795);
     --button-hover: #355187;
     --secondary-color: #64748b;
+
+    --separator-color: #f8fafc;
 
     --success-color: #10b981;
     --background-color: #ffffff;

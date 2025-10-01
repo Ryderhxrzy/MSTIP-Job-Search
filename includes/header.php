@@ -25,22 +25,22 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/companies" class="nav-link" data-page="companies">
+                    <a href="employer.php" class="nav-link" data-page="companies">
                         Employer
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/post-job" class="nav-link" data-page="post-job">
+                    <a href="searcher-advice.php" class="nav-link" data-page="post-job">
                         Searcher Advice
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/about" class="nav-link" data-page="about">
+                    <a href="about-us.php" class="nav-link" data-page="about">
                         About Us
                     </a>
                 </li>
                  <li class="nav-item">
-                    <a href="/about" class="nav-link" data-page="about">
+                    <a href="contact.php" class="nav-link" data-page="about">
                         Contact
                     </a>
                 </li>
@@ -52,7 +52,7 @@
                 <div class="user-actions">
                     <a href="login.php" class="btn btn-outline">Log In</a>
                     <span> &nbsp;/&nbsp; </span>
-                    <a href="pages/employer-home.php" class="nav-links employer-link">Employer Page</a>
+                    <a href="pages/employer/employer-home.php" class="nav-links employer-link">Employer Page</a>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -70,25 +70,25 @@
                 <a href="index.php" class="mobile-nav-link" data-page="jobs">
                     Find Jobs
                 </a>
-                <a href="/companies" class="mobile-nav-link" data-page="companies">
+                <a href="employer.php" class="mobile-nav-link" data-page="companies">
                     Employer
                 </a>
-                <a href="/post-job" class="mobile-nav-link" data-page="post-job">
+                <a href="searcher-advice.php" class="mobile-nav-link" data-page="post-job">
                     Searcher Advice
                 </a>
-                <a href="/about" class="mobile-nav-link" data-page="about">
+                <a href="about-us.php" class="mobile-nav-link" data-page="about">
                     About Us
                 </a>
-                <a href="/about" class="mobile-nav-link" data-page="about">
+                <a href="contact.php" class="mobile-nav-link" data-page="about">
                     Contact
                 </a>
                 <div class="mobile-user-actions">
-                    <a href="/login" class="btn btn-outline btn-block">Log In</a>
-                    <a href="/employer" class="nav-links employer-link">Employer Page</a>
+                    <a href="login.php" class="btn btn-outline btn-block">Log In</a>
+                    <a href="pages/employer/employer-home.php" class="nav-links employer-link">Employer Page</a>
                 </div>
             </div>
         </div>
     </nav>
 </header>
 
-<script src="../assets/js/script.js"></script>
+<script src="assets/js/script.js"></script>

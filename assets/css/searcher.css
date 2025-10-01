@@ -1,0 +1,267 @@
+/* ============================= */
+/* CSS RESET & BASE STYLES       */
+/* ============================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ============================= */
+/* LAYOUT COMPONENTS             */
+/* ============================= */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+}
+
+/* ============================= */
+/* TYPOGRAPHY                    */
+/* ============================= */
+.section-titles {
+    text-align: center;
+    margin: 3rem 0 1rem;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    color: var(--text-primary) !important;
+    padding: 0 1rem;
+}
+.section-title {
+    text-align: center;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin: 3rem 0 2rem;
+    color: var(--text-primary);
+}
+
+.section-subtitle {
+    font-size: clamp(14px, 2.5vw, 18px);
+    margin-bottom: 60px;
+    color: var(--text-secondary, #555);
+    text-align: center;
+    padding: 0 1rem;
+}
+
+/* ============================= */
+/* HERO SECTION                  */
+/* ============================= */
+.main-hero {
+    position: relative;
+    margin-top: -70px;
+    margin-bottom: 1.5rem;
+    padding: clamp(3rem, 6vw, 4rem) clamp(1rem, 3vw, 2rem) clamp(1.5rem, 3vw, 2rem);
+    text-align: center;
+    background: var(--surface-color, #fff);
+    overflow: hidden;
+}
+
+.main-hero .section-titles {
+    font-size: clamp(24px, 5vw, 36px);
+    color: var(--text-primary);
+}
+
+.main-hero .section-subtitle {
+    font-size: clamp(14px, 2.5vw, 18px);
+    margin-bottom: 0;
+    color: var(--text-secondary);
+}
+
+.pattern {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ============================= */
+/* STEPS SECTION                 */
+/* ============================= */
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(30px, 5vw, 60px);
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: clamp(20px, 4vw, 50px);
+    flex-wrap: wrap;
+    background: var(--surface-color);
+    padding: clamp(20px, 3vw, 30px);
+    border-radius: 12px;
+    border: 2px solid var(--primary-border, #eee);
+    overflow: hidden;
+    width: 100%;
+    max-width: 1200px;
+    position: relative;
+}
+
+.step-item:nth-child(even) {
+    flex-direction: row-reverse;
+    background: linear-gradient(90deg, #f9f9f9 0%, #fff 100%);
+}
+
+/* Decorative Circle Background */
+.step-item::before {
+    content: "";
+    position: absolute;
+    width: clamp(120px, 20vw, 180px);
+    height: clamp(120px, 20vw, 180px);
+    background: var(--circle-decorative, rgba(0,123,255,0.1));
+    border-radius: 50%;
+    top: -40px;
+    left: -50px;
+    z-index: 0;
+}
+
+.step-item:nth-child(even)::before {
+    left: auto;
+    right: -50px;
+}
+
+/* Step Content */
+.step-content {
+    flex: 1;
+    min-width: min(280px, 100%);
+    text-align: left;
+    z-index: 1;
+    position: relative;
+}
+
+.step-content h3 {
+    font-size: clamp(18px, 3vw, 24px);
+    margin-bottom: 15px;
+    color: #222;
+}
+
+.step-content p {
+    font-size: clamp(14px, 2vw, 16px);
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Step Number Badge */
+.step-number {
+    width: clamp(35px, 5vw, 40px);
+    height: clamp(35px, 5vw, 40px);
+    background: var(--primary-color, #007bff);
+    color: #fff;
+    font-weight: bold;
+    font-size: clamp(14px, 2.5vw, 18px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+/* Step Image */
+.step-image {
+    flex: 1;
+    min-width: min(280px, 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.step-image img {
+    width: 100%;
+    max-width: min(400px, 100%);
+    height: auto;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.step-image img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+}
+
+.how-it-works,
+.searcher-tips {
+    text-align: center;
+    padding: 0 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.how-it-works .section-title,
+.searcher-tips .section-title {
+    font-size: clamp(24px, 4vw, 32px);
+    margin-bottom: 10px;
+}
+
+.how-it-works .section-subtitle,
+.searcher-tips .section-subtitle {
+    font-size: clamp(14px, 2.5vw, 18px);
+    margin-bottom: clamp(30px, 6vw, 50px);
+    color: var(--text-secondary);
+}
+
+
+/* ============================= */
+/* TIPS SECTION                  */
+/* ============================= */
+.searcher-tips {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+}
+
+.tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+    gap: clamp(20px, 3vw, 30px);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tip {
+    padding: clamp(20px, 3vw, 25px);
+    border-radius: 12px;
+}
+
+.tip-icon {
+    font-size: clamp(28px, 4vw, 35px);
+    color: var(--primary-color, #007bff);
+    margin-bottom: 15px;
+}
+
+.tip h3 {
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+    margin-bottom: 0.5rem;
+}
+
+.tip p {
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+.separator {
+    margin: 3rem auto;
+    max-width: 1200px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0 1rem;
+}
+
+.separator svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 100px;
+}

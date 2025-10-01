@@ -21,10 +21,10 @@
       <h3>Quick Links</h3>
       <ul>
         <li><a href="index.php">Find Jobs</a></li>
-        <li><a href="#">Companies</a></li>
-        <li><a href="#">Post a Job Us</a></li>
-        <li><a href="#">About Us</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="employer.php">Employer</a></li>
+        <li><a href="search-advice.php">Search Advice</a></li>
+        <li><a href="about-us.php">About Us</a></li>
+        <li><a href="contact.php">Contact</a></li>
       </ul>
     </div>
 

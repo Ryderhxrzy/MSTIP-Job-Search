@@ -1,15 +1,15 @@
 <!-- Employer Header Component (Not Logged In) -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-<link rel="stylesheet" href="../assets/css/styles.css">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/header.css">
+<link rel="stylesheet" href="../../assets/css/styles.css">
+<link rel="stylesheet" href="../../assets/css/global.css">
+<link rel="stylesheet" href="../../assets/css/header.css">
 
 <header class="header">
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
                 <a href="/employer">
-                    <img src="../assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
+                    <img src="../../assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>
                         <span class="logo-subtitle">Seek Employee</span>
@@ -50,9 +50,9 @@
             <div class="nav-actions">
                 <!-- User Actions -->
                 <div class="user-actions">
-                    <a href="../employer-login.php" class="btn btn-outline">Log In</a>
+                    <a href="../../employer-login.php" class="btn btn-outline">Log In</a>
                     <span> &nbsp;/&nbsp; </span>
-                    <a href="register.php" class="nav-links employer-link">Post a Job</a>
+                    <a href="../../employer-register.php" class="nav-links employer-link">Post a Job</a>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -83,12 +83,12 @@
                     Contact
                 </a>
                 <div class="mobile-user-actions">
-                    <a href="login.php" class="btn btn-outline btn-block">Log In</a>
-                    <a href="register.php" class="nav-links employer-link">Post a Job</a>
+                    <a href="../.../employer-login.php" class="btn btn-outline btn-block">Log In</a>
+                    <a href="../../employer-register.php" class="nav-links employer-link">Post a Job</a>
                 </div>
             </div>
         </div>
     </nav>
 </header>
 
-<script src="../assets/js/script.js"></script>
+<script src="../../assets/js/script.js"></script>

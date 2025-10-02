@@ -121,19 +121,19 @@ INSERT INTO companies
 VALUES
 ('E100001','Accenture Philippines','Private',NULL,'Quezon City, Metro Manila','https://www.accenture.com/ph-en','Information Technology and Consulting',
 'Accenture is a global professional services company with leading capabilities in digital, cloud and security. Combining unmatched experience and specialized skills across more than 40 industries, we offer Strategy and Consulting, Interactive, Technology and Operations services. Our people deliver on the promise of technology and human ingenuity every day, helping clients in the Philippines and around the world to become more competitive and future-ready.',
-'images/accenture_logo.jpg','images/accenture_cover.jpg'),
+'images/accenture_logo.jpg','images/accenture_cover.png'),
 
 ('E100002','Globe Telecom','Private',NULL,'Taguig City, Metro Manila','https://www.globe.com.ph','Telecommunications',
 'Globe Telecom is a major provider of telecommunications services in the Philippines. We empower individuals, businesses, and institutions through our mobile, fixed line, broadband, and enterprise solutions. We are committed to creating wonderful digital experiences that enrich the lives of Filipinos, supporting innovation and inclusivity in a rapidly evolving digital world.',
-'images/globe_logo.png','images/globe_cover.jpg'),
+'images/globe_logo.png','images/globe_cover.png'),
 
 ('E100003','San Miguel Corporation','Private',NULL,'Mandaluyong City, Metro Manila','https://www.sanmiguel.com.ph','Conglomerate (Food, Beverage, Infrastructure, Energy)',
 'San Miguel Corporation is one of the Philippines’ largest and most diversified conglomerates with operations in beverages, food, packaging, fuel and oil, power, infrastructure, and property. With over a century of history, SMC has built trusted household brands and continues to play a vital role in national development while maintaining its mission of delivering quality products and services to millions of Filipinos.',
-'images/compies/smc_logo.png','images/smc_cover.jpg'),
+'images/compies/smc_logo.png','images/smc_cover.png'),
 
 ('E100004','Ayala Corporation','Private',NULL,'Makati City, Metro Manila','https://www.ayala.com.ph','Conglomerate (Real Estate, Banking, Telecom, Power)',
 'Ayala Corporation is one of the oldest and most respected conglomerates in the Philippines. With businesses spanning real estate, banking, telecommunications, water, power, healthcare, and education, Ayala has consistently been at the forefront of innovation and nation-building. The company is committed to sustainability and inclusive growth, creating long-term value for stakeholders and the communities it serves.',
-'images/ayala_logo.png','images/ayala_cover.jpg'),
+'images/ayala_logo.webp','images/ayala_cover.png'),
 
 ('E100005','Jollibee Foods Corporation','Private',NULL,'Pasig City, Metro Manila','https://www.jollibee.com.ph','Food and Beverage (Restaurant Chain)',
 'Jollibee Foods Corporation (JFC) is the largest Asian food service company, operating over 6,000 stores worldwide across multiple brands including Jollibee, Chowking, Greenwich, Red Ribbon, Mang Inasal, and Burger King Philippines. Known for its iconic Chickenjoy and strong Filipino heritage, JFC is committed to serving great tasting food and bringing the joy of eating to everyone, everywhere.',
@@ -141,15 +141,15 @@ VALUES
 
 ('E100006','Puregold Price Club','Private',NULL,'Quezon City, Metro Manila','https://www.puregold.com.ph','Retail and Supermarket',
 'Puregold Price Club, Inc. is one of the leading supermarket chains in the Philippines. Established to serve the everyday needs of Filipino families, Puregold provides a wide range of affordable groceries and household essentials. With its rapidly expanding footprint nationwide, the company has become a trusted retail brand known for value, convenience, and quality service.',
-'images/puregold_logo.png','images/puregold_cover.jpg'),
+'images/puregold_logo.webp','images/puregold_cover.png'),
 
 ('E100007','Department of Health','Government','DOH','Manila, Philippines','https://www.doh.gov.ph','Government (Healthcare Services)',
 'The Department of Health (DOH) is the principal health agency of the Philippine government. It is responsible for ensuring access to basic public health services, leading programs on disease prevention, health promotion, and regulation of health services. The DOH works tirelessly to improve healthcare systems, strengthen public hospitals, and respond to health emergencies nationwide.',
-'images/doh_logo.png','images/doh_cover.jpg'),
+'images/doh_logo.svg','images/doh_cover.avif'),
 
 ('E100008','Concentrix Philippines','Private',NULL,'Quezon City, Metro Manila','https://www.concentrix.com','Business Process Outsourcing (BPO)',
 'Concentrix is a leading global provider of customer experience (CX) solutions and technology. In the Philippines, Concentrix is one of the largest BPO employers, offering services in customer care, technical support, sales, and back-office operations across multiple industries. We focus on creating exceptional experiences for our clients and providing growth opportunities for our employees.',
-'images/concentrix_logo.png','images/concentrix_cover.jpg'),
+'images/concentrix_logo.jpg','images/concentrix_cover.jpg'),
 
 ('E100009','Philippine National Police','Government','PNP','Quezon City, Metro Manila','https://www.pnp.gov.ph','Government (Law Enforcement and Public Safety)',
 'The Philippine National Police (PNP) is the armed national police force tasked with enforcing the law, preventing and controlling crimes, and maintaining peace and order across the country. Guided by its vision to be a highly capable, effective, and credible police service, the PNP continues to safeguard communities and uphold the rule of law in service to the Filipino people.',

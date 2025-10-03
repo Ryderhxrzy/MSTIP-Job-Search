@@ -1,14 +1,96 @@
+<?php
+session_start();
+include_once('includes/db_connect.php');
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $remember = isset($_POST['remember']) ? true : false;
+    
+    // Validation
+    if (empty($email) || empty($password)) {
+        echo json_encode(['success' => false, 'message' => 'Email and password are required']);
+        exit;
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid email format']);
+        exit;
+    }
+    
+    // Check if user exists and get user data
+    $stmt = $conn->prepare("SELECT id, user_id, email_address, password, user_type, status FROM users WHERE email_address = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 0) {
+        echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
+        exit;
+    }
+    
+    $user = $result->fetch_assoc();
+    $stmt->close();
+    
+    // Verify password
+    if (!password_verify($password, $user['password'])) {
+        echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
+        exit;
+    }
+    
+    // Check if user type is Employer
+    if ($user['user_type'] !== 'Employer') {
+        echo json_encode(['success' => false, 'message' => 'Access denied. This login is for employers only.']);
+        exit;
+    }
+    
+    // Check if account is active
+    if ($user['status'] !== 'Active') {
+        echo json_encode(['success' => false, 'message' => 'Your account has been deactivated. Please contact support.']);
+        exit;
+    }
+    
+    // Set session variables
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['user_code'] = $user['user_id'];
+    $_SESSION['email'] = $user['email_address'];
+    $_SESSION['user_type'] = $user['user_type'];
+    $_SESSION['logged_in'] = true;
+    
+    // Handle remember me
+    if ($remember) {
+        // Set cookie for 30 days
+        setcookie('employer_remember', $user['user_id'], time() + (86400 * 30), '/');
+    }
+    
+    echo json_encode(['success' => true, 'message' => 'Login successful! Redirecting...']);
+    $conn->close();
+    exit;
+}
+
+// Check if user is already logged in
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer') {
+    header('Location: employer-dashboard.php');
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MSTIP Job Search</title>
+    <title>Employer Login - MSTIP Job Search</title>
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="assets/css/sweetalert.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
@@ -16,7 +98,7 @@
     <!-- ================= Enhanced Login Page ================= -->
     <div class="login-container">
         <div class="login-box">
-        <div class="logo">
+            <div class="logo">
                 <a href="index.php">
                     <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
@@ -26,74 +108,52 @@
                 </a>
             </div>
             <hr>
-        <h2 class="login-title">Welcome Back</h2>
-        <p class="login-subtitle">Sign in to manage your job postings</p>
+            <h2 class="login-title">Welcome Back</h2>
+            <p class="login-subtitle">Sign in to manage your job postings</p>
 
-        <!-- Enhanced Login Form -->
-        <form class="login-form" id="loginForm" novalidate>
-            <div class="form-group">
-            <input type="email" id="email" placeholder="Enter your email address *" required>
-            <small class="error-message" id="emailError"></small>
-            </div>
-            <div class="form-group">
-            <div class="password-group">
-                <input type="password" id="password" placeholder="Enter your password *" required>
-                <i class="fa fa-eye toggle-password" id="toggleIcon" onclick="togglePassword()"></i>
-            </div>
-            <small class="error-message" id="passwordError"></small>
-            </div>
-            <div class="form-options">
-            <div class="remember-me">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Remember me</label>
-            </div>
-            <a href="#" class="forgot-link">Forgot Password?</a>
-            </div>
-            <button type="submit" class="btn-login">
-            <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
-            Sign In
-            </button>
-        </form>
+            <!-- Enhanced Login Form -->
+            <form class="login-form" id="loginForm" method="POST">
+                <div class="form-group">
+                    <input type="email" id="email" name="email" placeholder="Enter your email address *" required>
+                    <small class="error-message" id="emailError"></small>
+                </div>
+                <div class="form-group">
+                    <div class="password-group">
+                        <input type="password" id="password" name="password" placeholder="Enter your password *" required>
+                        <i class="fa fa-eye toggle-password" id="toggleIcon" onclick="togglePassword()"></i>
+                    </div>
+                    <small class="error-message" id="passwordError"></small>
+                </div>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="#" class="forgot-link">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn-login">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 0.5rem;"></i>
+                    Sign In
+                </button>
+            </form>
 
-        <p class="register-text">
-            Don't have an account? <a href="employer-register.php" class="register-links">Create account</a>
-        </p>
-        <div class="divider"><span>or</span></div>
-        <p class="employer-links">
-            <a href="login.php">
-            <i class="fas fa-building" style="margin-right: 0.5rem;"></i>
-            Are you an Job Searcher?
-            </a>
-        </p>
+            <p class="register-text">
+                Don't have an account? <a href="employer-register.php" class="register-links">Create account</a>
+            </p>
+            <div class="divider"><span>or</span></div>
+            <p class="employer-links">
+                <a href="login.php">
+                    <i class="fas fa-user" style="margin-right: 0.5rem;"></i>
+                    Are you a Job Searcher?
+                </a>
+            </p>
         </div>
     </div>
-    <!-- ================= Why Choose MSTIP for Employers ================= -->
-<section class="why-mstip">
-    <div class="why-container">
-        <h2 class="why-title">Start Hiring in 3 Easy Steps</h2>
-        <p class="why-subtitle">MSTIP makes it simple for employers to find the right talent quickly.</p>
-        <div class="why-cards">
-            <div class="why-card">
-                <i class="fas fa-user-plus fa-2x"></i>
-                <h3>1. Register Online</h3>
-                <p>Create your free employer account in just minutes and get access to hiring tools.</p>
-            </div>
-            <div class="why-card">
-                <i class="fas fa-briefcase fa-2x"></i>
-                <h3>2. Post a Job</h3>
-                <p>Publish your job listings and reach thousands of qualified job seekers instantly.</p>
-            </div>
-            <div class="why-card">
-                <i class="fas fa-filter fa-2x"></i>
-                <h3>3. Sort Applicants</h3>
-                <p>Review applications, filter candidates, and connect with the right talent fast.</p>
-            </div>
-        </div>
-    </div>
-</section>
 
-
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/log-employer-script.js"></script>
+    <script>
+        
+    </script>
 </body>
 </html>

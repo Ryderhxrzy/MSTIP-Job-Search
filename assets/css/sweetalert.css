@@ -1,0 +1,161 @@
+/* SweetAlert Custom Design */
+.swal2-popup {
+  background: var(--surface-color) !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--primary-border) !important;
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+}
+
+/* Title */
+.swal2-title {
+  color: var(--text-primary) !important;
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Text Content */
+.swal2-html-container {
+  color: var(--text-secondary) !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Success */
+.swal2-icon.swal2-success {
+  border-color: var(--success-color) !important;
+}
+.swal2-icon.swal2-success .swal2-success-ring {
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+.swal2-icon.swal2-success [class^='swal2-success-line'] {
+  background-color: var(--success-color) !important;
+}
+
+/* Warning */
+.swal2-icon.swal2-warning {
+  border-color: var(--warning-color) !important;
+  color: var(--warning-color) !important;
+}
+
+/* Error */
+.swal2-icon.swal2-error {
+  border-color: var(--error-color) !important;
+}
+.swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
+  background-color: var(--error-color) !important;
+}
+
+/* Info */
+.swal2-icon.swal2-info {
+  border-color: var(--info-color) !important;
+  color: var(--info-color) !important;
+}
+
+/* Question */
+.swal2-icon.swal2-question {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Primary Button */
+.swal2-confirm {
+  background: var(--primary-color) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+.swal2-confirm:hover {
+  background: var(--primary-hover) !important;
+}
+.swal2-confirm:focus {
+  box-shadow: 0 0 0 3px rgba(14, 12, 91, 0.3) !important;
+}
+
+/* Cancel Button */
+.swal2-cancel {
+  background: transparent !important;
+  border: 2px solid var(--primary-border) !important;
+  color: var(--primary-color) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem 2rem !important;
+  font-size: 1rem !important;
+  font-weight: 500 !important;
+  transition: all 0.3s ease !important;
+}
+.swal2-cancel:hover {
+  background: var(--primary-color) !important;
+  color: var(--text-light) !important;
+  border-color: var(--primary-color) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Inputs */
+.swal2-input {
+  border: 2px solid var(--primary-border) !important;
+  border-radius: 8px !important;
+  padding: 0.75rem !important;
+  font-size: 1rem !important;
+  transition: all 0.3s ease !important;
+}
+.swal2-input:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(14, 12, 91, 0.1) !important;
+  outline: none !important;
+}
+
+/* Progress bar */
+.swal2-timer-progress-bar {
+  background: var(--primary-light) !important;
+}
+
+/* Footer */
+.swal2-footer {
+  border-top: 1px solid var(--primary-border) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Close button */
+.swal2-close {
+  color: var(--primary-border) !important;
+  font-size: 1.5rem !important;
+  transition: color 0.3s ease !important;
+}
+.swal2-close:hover {
+  color: var(--primary-color) !important;
+}
+
+/* Animations */
+@keyframes sweetAlertSlideIn {
+  from { transform: translateY(-30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes sweetAlertSlideOut {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-30px); opacity: 0; }
+}
+.swal2-show {
+  animation: sweetAlertSlideIn 0.3s ease !important;
+}
+.swal2-hide {
+  animation: sweetAlertSlideOut 0.3s ease !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .swal2-popup {
+    margin: 1rem !important;
+    width: auto !important;
+  }
+  .swal2-actions {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  .swal2-confirm,
+  .swal2-cancel {
+    width: 100% !important;
+  }
+}

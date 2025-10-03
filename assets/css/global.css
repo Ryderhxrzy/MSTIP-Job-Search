@@ -27,6 +27,11 @@
     --error-color: rgb(207, 0, 0);
     --success-color: rgb(0, 72, 0);
 
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --info-color: #06b6d4;
+
     --dark-color: #0e0c5b;
     --news-background: rgba(2, 14, 42, 0.795);
     --button-hover: #355187;

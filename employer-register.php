@@ -1,14 +1,101 @@
+<?php 
+include_once('includes/db_connect.php');
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmPassword'];
+    
+    // Validation
+    if (empty($email) || empty($password) || empty($confirmPassword)) {
+        echo json_encode(['success' => false, 'message' => 'All fields are required']);
+        exit;
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid email format']);
+        exit;
+    }
+    
+    if (!str_ends_with($email, '@gmail.com')) {
+        echo json_encode(['success' => false, 'message' => 'Only @gmail.com email addresses are accepted']);
+        exit;
+    }
+    
+    if ($password !== $confirmPassword) {
+        echo json_encode(['success' => false, 'message' => 'Passwords do not match']);
+        exit;
+    }
+    
+    if (strlen($password) <= 6) {
+        echo json_encode(['success' => false, 'message' => 'Password must be at least 7 characters long']);
+        exit;
+    }
+    
+    // Check if email already exists
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email_address = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        echo json_encode(['success' => false, 'message' => 'Email already registered']);
+        exit;
+    }
+    $stmt->close();
+    
+    // Generate unique user_id (E000000 format)
+    $user_id = 'E' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    
+    // Check if user_id exists (rare case)
+    $stmt = $conn->prepare("SELECT id FROM users WHERE user_id = ?");
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while ($result->num_rows > 0) {
+        $user_id = 'E' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        $stmt->bind_param("s", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    }
+    $stmt->close();
+    
+    // Hash password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+    // Insert into database
+    $stmt = $conn->prepare("INSERT INTO users (user_id, email_address, password, user_type, status) VALUES (?, ?, ?, 'Employer', 'Active')");
+    $stmt->bind_param("sss", $user_id, $email, $hashed_password);
+    
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Registration successful! Redirecting to login...']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Registration failed. Please try again.']);
+    }
+    
+    $stmt->close();
+    $conn->close();
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - Create Account</title>
+    <title>Employer Register - Create Account</title>
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="assets/css/sweetalert.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
@@ -21,35 +108,31 @@
                     <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>
-                        <span class="logo-subtitle">Seek Employee</span>
+                        <span class="logo-subtitle">Job Search</span>
                     </div>
                 </a>
             </div>
             <hr>
-            <h2 class="login-title">Create Account</h2>
-            <p class="login-subtitle">Join MSTIP to connect with talent</p>
+            <h2 class="login-title">Create Employer Account</h2>
+            <p class="login-subtitle">Join MSTIP to post job opportunities</p>
 
             <!-- Register Form -->
-            <form class="login-form" id="registerForm" novalidate>
+            <form class="login-form" method="POST" id="registerForm">
                 <div class="form-group">
-                    <input type="text" id="fullname" placeholder="Company/Organization Name *" required>
-                    <small class="error-message" id="nameError"></small>
-                </div>
-                <div class="form-group">
-                    <input type="email" id="email" placeholder="Enter your email address *" required>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address *" required>
                     <small class="error-message" id="emailError"></small>
                 </div>
                 <div class="form-group">
                     <div class="password-group">
-                        <input type="password" id="password" placeholder="Create a password *" required>
+                        <input type="password" id="password" name="password" placeholder="Create a password *" required>
                         <i class="fa fa-eye toggle-password" id="toggleIcon" onclick="togglePassword()"></i>
                     </div>
                     <small class="error-message" id="passwordError"></small>
                 </div>
                 <div class="form-group">
                     <div class="password-group">
-                        <input type="password" id="confirmPassword" placeholder="Confirm password *" required>
-                        <i class="fa fa-eye toggle-password" onclick="toggleConfirmPassword()"></i>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password *" required>
+                        <i class="fa fa-eye toggle-password" id="toggleConfirmIcon" onclick="toggleConfirmPassword()"></i>
                     </div>
                     <small class="error-message" id="confirmPasswordError"></small>
                 </div>
@@ -65,13 +148,18 @@
             </p>
             <div class="divider"><span>or</span></div>
             <p class="employer-links">
-                <a href="employer-login.php">
-                    <i class="fas fa-building" style="margin-right: 0.5rem;"></i>
-                    Are you an Job Searcher?
+                <a href="login.php">
+                    <i class="fas fa-user" style="margin-right: 0.5rem;"></i>
+                    Are you a Graduate?
                 </a>
             </p>
         </div>
     </div>
+
     <script src="assets/js/reg-employer-script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        
+    </script>
 </body>
 </html>

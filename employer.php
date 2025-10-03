@@ -561,12 +561,13 @@
                                 c.profile_picture,
                                 c.about_company,
                                 COUNT(j.job_id) as total_jobs,
-                                SUM(CASE WHEN j.job_category = 'deaf' THEN 1 ELSE 0 END) as deaf_jobs
-                             FROM companies c
-                             LEFT JOIN job_listings j ON c.company_id = j.company_id 
-                             WHERE j.status = 'Open' OR j.status IS NULL
-                             GROUP BY c.company_id, c.company_name, c.industry, c.location, c.company_type, c.profile_picture, c.about_company
-                             ORDER BY total_jobs DESC";
+                                SUM(CASE WHEN j.job_category = 'deaf' THEN 1 ELSE 0 END) as deaf_jobs,
+                                SUM(CASE WHEN j.job_category != 'deaf' THEN 1 ELSE 0 END) as normal_jobs
+                            FROM companies c
+                            LEFT JOIN job_listings j ON c.company_id = j.company_id 
+                            WHERE j.status = 'Open' OR j.status IS NULL
+                            GROUP BY c.company_id, c.company_name, c.industry, c.location, c.company_type, c.profile_picture, c.about_company
+                            ORDER BY total_jobs DESC";
             
             $companiesResult = mysqli_query($conn, $companiesQuery);
             
@@ -587,7 +588,8 @@
                         logo: \"{$logo}\",
                         about: \"{$about}\",
                         jobsCount: {$company['total_jobs']},
-                        jobsDeafCount: {$company['deaf_jobs']}
+                        jobsDeafCount: {$company['deaf_jobs']},
+                        jobsNormalCount: {$company['normal_jobs']}
                     },";
                 }
             }
@@ -635,7 +637,7 @@
                         <i class="fas fa-star"></i>
                     </div>
                     <div class="company-logo">
-                        <img src="${company.logo}" alt="${company.name} Logo" onerror="this.src='assets/images/background1.jpeg'">
+                        <img src="assets/${company.logo}" alt="${company.name} Logo" onerror="this.src='assets/images/background1.jpeg'">
                     </div>
                     <div class="company-info">
                         <h3 class="company-name">${company.name}</h3>
@@ -646,10 +648,10 @@
                         </div>
                         <div class="job-counts">
                             <p class="job-count-normal">
-                                <i class="fas fa-user"></i> ${company.jobsCount} Jobs
+                                <i class="fas fa-user"></i> ${company.jobsNormalCount} Normal Jobs
                             </p>
                             <p class="job-count-deaf">
-                                <i class="fas fa-deaf"></i> ${company.jobsDeafCount} Jobs
+                                <i class="fas fa-deaf"></i> ${company.jobsDeafCount} Deaf Jobs
                             </p>
                         </div>
                     </div>

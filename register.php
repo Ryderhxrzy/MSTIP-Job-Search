@@ -1,3 +1,5 @@
+<?php include_once('includes/db_connect.php') ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,7 +10,9 @@
     <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="stylesheet" href="assets/css/global.css">
     <link rel="stylesheet" href="assets/css/login.css">
+    <link rel="stylesheet" href="assets/css/sweetalert.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
@@ -30,25 +34,25 @@
             <p class="login-subtitle">Join MSTIP to start your job search</p>
 
             <!-- Register Form -->
-            <form class="login-form" id="registerForm" novalidate>
+            <form class="login-form" method="POST" id="registerForm">
                 <div class="form-group">
-                    <input type="text" id="fullname" placeholder="Full Name *" required>
+                    <input type="text" id="fullname" name="fullname" placeholder="Full Name *" required>
                     <small class="error-message" id="nameError"></small>
                 </div>
                 <div class="form-group">
-                    <input type="email" id="email" placeholder="Enter your email address *" required>
+                    <input type="email" id="email" name="email" placeholder="Enter your email address *" required>
                     <small class="error-message" id="emailError"></small>
                 </div>
                 <div class="form-group">
                     <div class="password-group">
-                        <input type="password" id="password" placeholder="Create a password *" required>
+                        <input type="password" id="password" name="password" placeholder="Create a password *" required>
                         <i class="fa fa-eye toggle-password" id="toggleIcon" onclick="togglePassword()"></i>
                     </div>
                     <small class="error-message" id="passwordError"></small>
                 </div>
                 <div class="form-group">
                     <div class="password-group">
-                        <input type="password" id="confirmPassword" placeholder="Confirm password *" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password *" required>
                         <i class="fa fa-eye toggle-password" onclick="toggleConfirmPassword()"></i>
                     </div>
                     <small class="error-message" id="confirmPasswordError"></small>
@@ -72,6 +76,7 @@
             </p>
         </div>
     </div>
-    <script src="assets/js/reg-script.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

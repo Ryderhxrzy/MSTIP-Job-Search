@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SweetAlert Custom Test</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link rel="stylesheet" href="assets/css/sweetalert.css">  
+  <link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+  <button onclick="showSuccess()">Show Success</button>
+  <button onclick="showError()">Show Error</button>
+  <button onclick="showWarning()">Show Warning</button>
+  <button onclick="showInfo()">Show Info</button>
+  <button onclick="showQuestion()">Show Question</button>
+  <button onclick="showInput()">Show Input</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    function showSuccess() {
+      Swal.fire('Success!', 'Your action was successful.', 'success');
+    }
+    function showError() {
+      Swal.fire('Error!', 'Something went wrong.', 'error');
+    }
+    function showWarning() {
+      Swal.fire('Warning!', 'Please be cautious.', 'warning');
+    }
+    function showInfo() {
+      Swal.fire('Information', 'This is an info message.', 'info');
+    }
+    function showQuestion() {
+      Swal.fire('Are you sure?', 'Do you want to continue?', 'question');
+    }
+    function showInput() {
+      Swal.fire({
+        title: 'Enter your name',
+        input: 'text',
+        showCancelButton: true,
+        confirmButtonText: 'Submit'
+      });
+    }
+  </script>
+</body>
+</html>

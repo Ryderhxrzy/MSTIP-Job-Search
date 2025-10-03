@@ -64,7 +64,7 @@
         </div>
 
         <!-- Contact Info -->
-        <section class="contact-info">
+        <section class="contact-infos">
             <div class="container">
                 <h2 class="section-title">Our Contact Info</h2>
                 <div class="info-grid">

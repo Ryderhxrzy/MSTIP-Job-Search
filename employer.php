@@ -596,7 +596,7 @@
 
         // Pagination and filtering variables
         let currentPage = 1;
-        const companiesPerPage = 9;
+        const companiesPerPage = 6;
         let filteredCompanies = [...allCompanies];
         let currentSort = 'jobs';
 

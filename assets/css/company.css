@@ -1,0 +1,529 @@
+main {
+    padding: 10px;
+}
+
+.company-details-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+            
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--primary-border);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .back-button:hover {
+            background: var(--surface-color);
+            border-color: var(--primary-color);
+        }
+
+        .company-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--primary-border);
+        }
+
+        .tab-button {
+            padding: 0.875rem 1.5rem;
+            background: none;
+            border: none;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+        .tab-button.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-button:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Company Overview Styles */
+        .company-header {
+            background: white;
+            border: 1px solid var(--primary-border);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .company-main-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .company-logo-xxl {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .company-title-section h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            color: var(--text-primary);
+        }
+
+        .company-industry {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin: 0 0 0.75rem 0;
+        }
+
+        .company-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .company-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: var(--surface-color);
+            padding: 1.25rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .company-details-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .company-info-section, .company-contact-section {
+            background: white;
+            border: 1px solid var(--primary-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 1.25rem 0;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--surface-color);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .info-item i {
+            color: var(--primary-color);
+            font-size: 1rem;
+            width: 20px;
+            margin-top: 0.125rem;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .company-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            white-space: pre-line;
+        }
+
+        .culture-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .culture-tag {
+            background: var(--primary-light);
+            color: var(--text-light);
+            padding: 0.375rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Jobs Tab Styles */
+        .jobs-container {
+            background: white;
+            border: 1px solid var(--primary-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .jobs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--surface-color);
+        }
+
+        .jobs-count {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .job-filters {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-select {
+            padding: 0.625rem 0.875rem;
+            border: 1px solid var(--primary-border);
+            border-radius: 6px;
+            background: white;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+        }
+
+        /* Job Card Styles */
+        .job-listing-card {
+            background: white;
+            border: 1px solid var(--primary-border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .job-listing-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .job-title-wrapper {
+            flex: 1;
+        }
+
+        .job-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .job-category-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.25rem 0.625rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .job-category-badge.normal {
+            background: #ecfdf5;
+            color: #047857;
+        }
+
+        .job-category-badge.deaf {
+            background: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .job-posted-date {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .job-basic-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .job-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .job-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-item i {
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .detail-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .detail-value {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .job-description-section h5 {
+            font-size: 0.95rem;
+            margin: 0 0 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .job-description-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .job-deadline-contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .deadline-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .deadline-info i {
+            color: var(--text-secondary);
+        }
+
+        .deadline-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .deadline-date {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .job-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-apply, .btn-save {
+            padding: 0.625rem 1.25rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-apply {
+            background: var(--primary-color);
+            color: white;
+            flex: 1;
+        }
+
+        .btn-save {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--primary-border);
+        }
+
+        .btn-save:hover {
+            background: var(--surface-color);
+        }
+
+        .no-jobs-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .no-jobs-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-border);
+        }
+
+        .no-jobs-message p {
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-jobs-message small {
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .error-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ef4444;
+        }
+
+        .error-message h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .company-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .company-main-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .company-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .job-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .job-basic-info {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .job-details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .job-deadline-contact {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .company-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                text-align: center;
+            }
+            
+            .job-filters {
+                flex-direction: column;
+            }
+            
+            .company-stats {
+                grid-template-columns: 1fr;
+            }
+        }

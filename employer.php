@@ -1,4 +1,7 @@
-<?php include_once('includes/db_connect.php') ?>
+<?php 
+    include_once('includes/db_connect.php');
+    session_start(); 
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -637,7 +640,7 @@
                         <i class="fas fa-star"></i>
                     </div>
                     <div class="company-logo">
-                        <img src="assets/${company.logo}" alt="${company.name} Logo" onerror="this.src='assets/images/background1.jpeg'">
+                        <img src="assets/images/${company.logo}" alt="${company.name} Logo" onerror="this.src='assets/images/background1.jpeg'">
                     </div>
                     <div class="company-info">
                         <h3 class="company-name">${company.name}</h3>
@@ -659,6 +662,11 @@
                         <i class="fas fa-arrow-right"></i>
                     </div>
                 `;
+                // Add click event to redirect to company details page
+                companyCard.addEventListener('click', function() {
+                    window.location.href = 'company-details.php?id=' + company.id;
+                });
+
                 companiesGrid.appendChild(companyCard);
             });
         }

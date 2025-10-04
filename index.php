@@ -898,7 +898,7 @@
         
         // Add click event to redirect to company details page
         companyCard.addEventListener('click', function() {
-            window.location.href = 'company_details.php?id=' + company.id;
+            window.location.href = 'company-details.php?id=' + company.id;
         });
         
         companiesGrid.appendChild(companyCard);

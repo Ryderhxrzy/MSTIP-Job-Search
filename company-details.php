@@ -26,8 +26,8 @@
     <main>
         <div class="company-details-container">
             <!-- Back Button -->
-            <a href="index.php" class="back-button">
-                <i class="fas fa-arrow-left"></i> Back to Home
+            <a href="javascript:history.back()" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back
             </a>
 
             <?php

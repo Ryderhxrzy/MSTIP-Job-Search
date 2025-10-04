@@ -67,77 +67,106 @@ main {
             display: block;
         }
 
-        /* Company Overview Styles */
         .company-header {
-            background: white;
-            border: 1px solid var(--primary-border);
-            padding: 2rem;
-            border-radius: 12px;
-            margin-bottom: 2rem;
-        }
+    position: relative;
+    background: var(--primary-color);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    border: 1px solid var(--primary-border);
+    min-height: 300px;
+}
+
+.company-header-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.company-header-content {
+    position: relative;
+    z-index: 2;
+    padding: 3rem 2rem;
+}
 
         .company-main-info {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
 
-        .company-logo-xxl {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
+.company-logo-xxl {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    background: white;
+}
 
-        .company-title-section h1 {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin: 0 0 0.25rem 0;
-            color: var(--text-primary);
-        }
+.company-title-section h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    color: white;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
 
-        .company-industry {
-            font-size: 1rem;
-            color: var(--text-secondary);
-            margin: 0 0 0.75rem 0;
-        }
+.company-industry {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0 0 0.75rem 0;
+}
 
-        .company-rating {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-        }
+.company-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
 
-        .company-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-        }
+.company-rating i {
+    color: #fbbf24;
+}
 
-        .stat-card {
-            background: var(--surface-color);
-            padding: 1.25rem;
-            border-radius: 8px;
-            text-align: center;
-        }
+.company-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
 
-        .stat-number {
-            font-size: 1.5rem;
-            font-weight: 600;
-            display: block;
-            margin-bottom: 0.25rem;
-        }
+.stat-card {
+    background: var(--surface-color);
+    padding: 1.25rem;
+    border-radius: 8px;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
 
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+.stat-number {
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
 
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
         .company-details-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;

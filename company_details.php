@@ -44,6 +44,7 @@
                 $company = mysqli_fetch_assoc($companyResult);
                 
                 if ($company) {
+                    $coverImagePath = !empty($company['cover_image']) ? 'assets/images/' . $company['cover_image'] : 'assets/images/default-cover.jpg';
                     // Fetch company jobs
                     $jobsQuery = "SELECT * FROM job_listings WHERE company_id = ? AND status = 'Open' ORDER BY posted_date DESC";
                     $stmt = mysqli_prepare($conn, $jobsQuery);
@@ -78,38 +79,41 @@
             <div id="overview-tab" class="tab-content active">
                 <!-- Company Header -->
                 <div class="company-header">
-                    <div class="company-main-info">
-                        <img src="<?php echo $logoPath; ?>" alt="<?php echo htmlspecialchars($company['company_name']); ?>" class="company-logo-xxl" onerror="this.src='assets/images/background1.jpeg'">
-                        <div class="company-title-section">
-                            <h1><?php echo htmlspecialchars($company['company_name']); ?></h1>
-                            <p class="company-industry"><?php echo htmlspecialchars($company['industry']); ?></p>
-                            <div class="company-rating">
-                                <span>5.0</span>
-                                <i class="fas fa-star"></i>
-                                <span>(120 reviews)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="company-stats">
-                        <div class="stat-card">
-                            <span class="stat-number"><?php echo $totalJobs; ?></span>
-                            <span class="stat-label">Total Jobs</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number"><?php echo $normalJobs; ?></span>
-                            <span class="stat-label">Normal Jobs</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number"><?php echo $deafJobs; ?></span>
-                            <span class="stat-label">Deaf-Friendly Jobs</span>
-                        </div>
-                        <div class="stat-card">
-                            <span class="stat-number">50+</span>
-                            <span class="stat-label">Employees</span>
-                        </div>
-                    </div>
+    <div class="company-header-background" style="background-image: url('<?php echo $coverImagePath; ?>');"></div>
+    <div class="company-header-content">
+        <div class="company-main-info">
+            <img src="<?php echo $logoPath; ?>" alt="<?php echo htmlspecialchars($company['company_name']); ?>" class="company-logo-xxl" onerror="this.src='assets/images/background1.jpeg'">
+            <div class="company-title-section">
+                <h1><?php echo htmlspecialchars($company['company_name']); ?></h1>
+                <p class="company-industry"><?php echo htmlspecialchars($company['industry']); ?></p>
+                <div class="company-rating">
+                    <span>5.0</span>
+                    <i class="fas fa-star"></i>
+                    <span>(120 reviews)</span>
                 </div>
+            </div>
+        </div>
+        
+        <div class="company-stats">
+            <div class="stat-card">
+                <span class="stat-number"><?php echo $totalJobs; ?></span>
+                <span class="stat-label">Total Jobs</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number"><?php echo $normalJobs; ?></span>
+                <span class="stat-label">Normal Jobs</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number"><?php echo $deafJobs; ?></span>
+                <span class="stat-label">Deaf-Friendly Jobs</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">50+</span>
+                <span class="stat-label">Employees</span>
+            </div>
+        </div>
+    </div>
+</div>
 
                 <!-- Company Details Grid -->
                 <div class="company-details-grid">

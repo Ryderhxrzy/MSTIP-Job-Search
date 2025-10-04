@@ -65,7 +65,7 @@
                         }
                     }
                     
-                    $logoPath = !empty($company['profile_picture']) ? 'assets/' . $company['profile_picture'] : 'assets/images/background1.jpeg';
+                    $logoPath = !empty($company['profile_picture']) ? 'assets/images/' . $company['profile_picture'] : 'assets/images/background1.jpeg';
             ?>
             
             <!-- Tabs Navigation -->

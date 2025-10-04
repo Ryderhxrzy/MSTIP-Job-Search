@@ -117,7 +117,7 @@ document.getElementById("password").addEventListener("input", function () {
                         showConfirmButton: false,
                         timer: 1500
                     }).then(() => {
-                        window.location.href = 'employer-dashboard.php';
+                        window.location.href = 'pages/employer/dashboard.php';
                     });
                 } else {
                     Swal.fire({

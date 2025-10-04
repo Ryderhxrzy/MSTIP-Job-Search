@@ -108,6 +108,8 @@
         </section>
     </main>
 
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/profile.js"></script>
     <?php include_once('../../includes/employer-footer.php') ?>
 </body>
 </html>

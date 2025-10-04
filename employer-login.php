@@ -1,7 +1,21 @@
 <?php
 session_start();
 include_once('includes/db_connect.php');
-
+if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
+    echo '
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        Swal.fire({
+            icon: "success",
+            title: "Logged Out Successfully",
+            text: "You have been successfully logged out.",
+            timer: 3000,
+            showConfirmButton: false
+        });
+    });
+    </script>
+    ';
+}
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
@@ -73,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Check if user is already logged in
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer') {
-    header('Location: employer-dashboard.php');
+    header('Location: dashboard.php');
     exit;
 }
 ?>
@@ -152,8 +166,5 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSIO
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/log-employer-script.js"></script>
-    <script>
-        
-    </script>
 </body>
 </html>

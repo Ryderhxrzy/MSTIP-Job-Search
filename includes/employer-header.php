@@ -1,4 +1,25 @@
-<!-- Employer Header Component (Not Logged In) -->
+<?php 
+    include_once('../../includes/db_connect.php');
+    session_start();
+
+    $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer';
+    $userEmail = $isLoggedIn ? $_SESSION['email'] : '';
+    $userCode = $isLoggedIn ? $_SESSION['user_code'] : '';
+
+    // Function to get profile picture URL
+    function getProfilePicture($userCode) {
+        // Check if profile picture exists in database or file system
+        $profilePicPath = "../../assets/images/profiles/" . $userCode . ".jpg";
+        $defaultProfilePic = "../../assets/images/default-profile.jpg";
+        
+        if (file_exists($profilePicPath)) {
+            return $profilePicPath;
+        } else {
+            return $defaultProfilePic;
+        }
+    }
+?>
+
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../../assets/css/styles.css">
 <link rel="stylesheet" href="../../assets/css/global.css">
@@ -50,9 +71,42 @@
             <div class="nav-actions">
                 <!-- User Actions -->
                 <div class="user-actions">
-                    <a href="../../employer-login.php" class="btn btn-outline">Log In</a>
-                    <span> &nbsp;/&nbsp; </span>
-                    <a href="../../employer-register.php" class="nav-links employer-link">Post a Job</a>
+                    <?php if ($isLoggedIn): ?>
+                        <!-- User Profile Dropdown and Post a Job button -->
+                        <div class="logged-in-actions">
+                            <!-- Profile Dropdown First -->
+                            <div class="user-profile-dropdown">
+                                <button class="profile-toggle" id="profileToggle">
+                                    <img src="<?php echo getProfilePicture($userCode); ?>" alt="Profile Picture" class="profile-pic">
+                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                </button>
+                                <div class="profile-dropdown-menu" id="profileDropdown">
+                                    <a href="company-profile.php" class="dropdown-item">
+                                        <i class="fas fa-user"></i>
+                                        Company Profile
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a href="../../logout.php" class="dropdown-item logout-item">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        Logout
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Separator -->
+                            <span class="action-separator">/</span>
+                            
+                            <!-- Post a Job Button -->
+                            <a href="post-job.php" class="employer-link">Post a Job</a>
+                        </div>
+                    <?php else: ?>
+                        <!-- Show login button and Post a Job when not logged in -->
+                        <div class="logged-out-actions">
+                            <a href="../../employer-login.php" class="btn btn-outline">Log In</a>
+                            <span class="action-separator">/</span>
+                            <a href="../../employer-register.php" class="employer-link">Post a Job</a>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Mobile Menu Toggle -->
@@ -82,10 +136,35 @@
                 <a href="contact.php" class="mobile-nav-link" data-page="contact">
                     Contact
                 </a>
-                <div class="mobile-user-actions">
-                    <a href="../.../employer-login.php" class="btn btn-outline btn-block">Log In</a>
-                    <a href="../../employer-register.php" class="nav-links employer-link">Post a Job</a>
-                </div>
+                
+                <?php if ($isLoggedIn): ?>
+                    <!-- Mobile User Profile Options -->
+                    <div class="mobile-user-profile">
+                        <div class="mobile-profile-header">
+                            <img src="<?php echo getProfilePicture($userCode); ?>" alt="Profile Picture" class="mobile-profile-pic">
+                            <span class="mobile-profile-email"><?php echo htmlspecialchars($userEmail); ?></span>
+                        </div>
+                        
+                        <!-- Profile Links -->
+                        <a href="company-profile.php" class="mobile-nav-link">
+                            <i class="fas fa-user"></i>
+                            Company Profile
+                        </a>
+                        
+                        <a href="../../logout.php" class="mobile-nav-link logout-mobile">
+                            <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                        </a>
+
+                        <a href="post-job.php" class="employer-link">Post a Job</a>
+                    </div>
+                <?php else: ?>
+                    <!-- Mobile login and Post a Job when not logged in -->
+                    <div class="mobile-user-actions">
+                        <a href="../../employer-login.php" class="btn btn-outline btn-block">Log In</a>
+                        <a href="../../employer-register.php" class="employer-link btn-block">Post a Job</a>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </nav>

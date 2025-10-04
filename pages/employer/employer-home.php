@@ -190,7 +190,9 @@
     </main>
 
     <?php include_once('../../includes/employer-footer.php') ?>
-
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/profile.js"></script>
+    
     <script>
      const track = document.querySelector(".logos-track");
 const logos = document.querySelectorAll(".logos-track img");

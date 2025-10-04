@@ -76,5 +76,7 @@
     </main>
 
     <?php include_once('../../includes/employer-footer.php') ?>
+    <script src="../../assets/js/script.js"></script>
+    <script src="../../assets/js/profile.js"></script>
 </body>
 </html>

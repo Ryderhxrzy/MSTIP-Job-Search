@@ -13,12 +13,7 @@
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-    
-    <style>
-        
 
-        
-    </style>
 </head>
 <body>
     <?php include_once('includes/db_connect.php') ?>
@@ -499,7 +494,7 @@
                 item.className = 'company-list-item' + (index === 0 ? ' selected' : '');
                 
                 // Check if logo exists and create proper image path
-                const logoPath = company.logo ? 'assets/' + company.logo : 'assets/images/background1.jpeg';
+                const logoPath = company.logo ? 'assets/images/' + company.logo : 'assets/images/background1.jpeg';
                 
                 item.innerHTML = '<img src="' + logoPath + '" alt="' + company.name + '" class="company-logo-small" onerror="this.src=\'assets/images/background1.jpeg\'">' +
                     '<div class="company-brief">' +
@@ -537,7 +532,7 @@
                 item.className = 'job-list-item' + (index === 0 ? ' selected' : '');
                 
                 // Check if company logo exists and create proper image path
-                const logoPath = job.company_logo ? 'assets/' + job.company_logo : 'assets/images/background1.jpeg';
+                const logoPath = job.company_logo ? 'assets/images/' + job.company_logo : 'assets/images/background1.jpeg';
                 
                 item.innerHTML = '<img src="' + logoPath + '" alt="' + job.company_name + '" class="company-logo-small" onerror="this.src=\'assets/images/background1.jpeg\'">' +
                     '<div class="job-brief">' +
@@ -571,7 +566,7 @@
             const companyJobs = jobListingsData[company.id] || [];
             
             // Check if logo exists and create proper image path
-            const logoPath = company.logo ? 'assets/' + company.logo : 'assets/images/background1.jpeg';
+            const logoPath = company.logo ? 'assets/images/' + company.logo : 'assets/images/background1.jpeg';
             
             panel.innerHTML = '<div class="company-details-header">' +
                     '<img src="' + logoPath + '" alt="' + company.name + '" class="company-logo-large" onerror="this.src=\'assets/images/background1.jpeg\'">' +
@@ -610,7 +605,7 @@
             const categoryLabel = job.category === 'deaf' ? ' Deaf-Friendly Job' : ' Open to All';
             
             // Check if company logo exists and create proper image path
-            const logoPath = job.company_logo ? 'assets/' + job.company_logo : 'assets/images/background1.jpeg';
+            const logoPath = job.company_logo ? 'assets/images/' + job.company_logo : 'assets/images/background1.jpeg';
             
             panel.innerHTML = '<div class="job-details-header">' +
                     '<div class="company-logo-header">' +
@@ -883,7 +878,7 @@
                 '<i class="fas fa-star"></i>' +
             '</div>' +
             '<div class="company-logo">' +
-                '<img src="assets/' + company.logo + '" alt="' + company.name + ' Logo" onerror="this.src=\'assets/images/background1.jpeg\'">' +
+                '<img src="assets/images/' + company.logo + '" alt="' + company.name + ' Logo" onerror="this.src=\'assets/images/background1.jpeg\'">' +
             '</div>' +
             '<div class="company-info">' +
                 '<h3 class="company-name">' + company.name + '</h3>' +

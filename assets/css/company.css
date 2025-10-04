@@ -135,7 +135,7 @@ main {
 }
 
 .company-rating i {
-    color: #fbbf24;
+    color: var(--accent-color);
 }
 
 .company-stats {

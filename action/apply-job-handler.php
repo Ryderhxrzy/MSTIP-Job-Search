@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['user_code'];
 $job_id = $_POST['job_id'] ?? null;
 
 if (!$job_id) {
@@ -34,3 +34,4 @@ if ($stmt->execute()) {
 } else {
     echo json_encode(['success' => false, 'message' => 'Failed to submit application.']);
 }
+?>

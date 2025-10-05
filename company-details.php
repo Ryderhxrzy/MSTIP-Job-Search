@@ -17,43 +17,10 @@ session_start();
     <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/company.css">
+    <link rel="stylesheet" href="assets/css/sweetalert.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-
-    <style>
-        .modal {
-  position: fixed;
-  top: 0; left: 0; right:0; bottom:0;
-  background: rgba(0,0,0,0.6);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-.modal-content {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 600px;
-  width: 100%;
-}
-.close-btn {
-  float:right;
-  font-size: 24px;
-  cursor:pointer;
-}
-#graduateInfo p { margin:6px 0; }
-.btn-confirm {
-  background:#007bff;
-  color:#fff;
-  border:none;
-  padding:10px 16px;
-  border-radius:6px;
-  cursor:pointer;
-  margin-top:15px;
-}
-    </style>
 </head>
 <body>
     <?php include_once('includes/header.php'); ?>
@@ -397,14 +364,30 @@ session_start();
         </div>
     </main>
 
-    <div id="applicationModal" class="modal" style="display:none;">
+    <div id="applicationModal" class="modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal()">&times;</span>
-        <h2>Confirm Application</h2>
-        <div id="graduateInfo"></div>
-        <button id="confirmApplyBtn" class="btn-confirm">Submit Application</button>
+        
+        <div class="modal-header">
+            <h2><i class="fas fa-file-alt"></i> Confirm Job Application</h2>
+            <p>Please review your information before submitting your application</p>
+        </div>
+        
+        <div class="graduate-info-card">
+            <h3><i class="fas fa-user-graduate"></i> Applicant Information</h3>
+            <div class="info-grid" id="graduateInfo">
+                <!-- Graduate information will be populated here -->
+            </div>
+        </div>
+        
+        <div class="modal-actions">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+            <button id="confirmApplyBtn" class="btn btn-primary">
+                <i class="fas fa-paper-plane"></i> &nbsp;Submit Application
+            </button>
+        </div>
     </div>
-    </div>
+</div>
 
     <?php include_once('includes/footer.php'); ?>
     <script src="assets/js/script.js"></script>
@@ -491,17 +474,56 @@ session_start();
     .then(data => {
         if (data.success) {
             let infoHtml = `
-                <p><strong>Name:</strong> ${data.first_name} ${data.middle_name ?? ''} ${data.last_name}</p>
-                <p><strong>Phone:</strong> ${data.phone_number}</p>
-                <p><strong>Course:</strong> ${data.course}</p>
-                <p><strong>Year Graduated:</strong> ${data.year_graduated}</p>
-                <p><strong>Skills:</strong> ${data.skills ?? 'N/A'}</p>
-                <p><strong>LinkedIn:</strong> <a href="${data.linkedin_profile}" target="_blank">View Profile</a></p>
-                <p><strong>Resume:</strong> <a href="uploads/resumes/${data.resume}" target="_blank">View Resume</a></p>
+                <div class="info-item">
+                    <span class="info-label">Full Name</span>
+                    <span class="info-value">${data.first_name} ${data.middle_name ?? ''} ${data.last_name}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Phone Number</span>
+                    <span class="info-value">${data.phone_number}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Course</span>
+                    <span class="info-value">${data.course}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Year Graduated</span>
+                    <span class="info-value">${data.year_graduated}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Skills</span>
+                    <span class="info-value">${data.skills ?? 'N/A'}</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">LinkedIn Profile</span>
+                    <span class="info-value">
+                        ${data.linkedin_profile ? 
+                            `<a href="${data.linkedin_profile}" target="_blank">View Profile</a>` : 
+                            'Not provided'
+                        }
+                    </span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Resume</span>
+                    <span class="info-value">
+                        ${data.resume ? 
+                            `<a href="assets/resumes/${data.resume}" target="_blank">View Resume</a>` : 
+                            'Not uploaded'
+                        }
+                    </span>
+                </div>
             `;
             document.getElementById('graduateInfo').innerHTML = infoHtml;
-            document.getElementById('applicationModal').style.display = 'flex';
-
+            
+            // Show modal - make sure it's visible first, then add active class
+            const modal = document.getElementById('applicationModal');
+            modal.style.display = 'flex';
+            
+            // Use setTimeout to ensure the display change has taken effect before adding active class
+            setTimeout(() => {
+                modal.classList.add('active');
+            }, 10);
+            
             // Attach jobId to confirm button
             document.getElementById('confirmApplyBtn').onclick = function() {
                 confirmApplication(jobId);
@@ -513,25 +535,75 @@ session_start();
 }
 
 function closeModal() {
-    document.getElementById('applicationModal').style.display = 'none';
+    const modal = document.getElementById('applicationModal');
+    
+    // Remove active class first for animation
+    modal.classList.remove('active');
+    
+    // Wait for animation to complete before hiding
+    setTimeout(() => {
+        modal.style.display = 'none';
+    }, 300);
 }
 
 function confirmApplication(jobId) {
     fetch('action/apply-job-handler.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
         body: 'job_id=' + jobId
     })
-    .then(res => res.json())
+    .then(res => {
+        if (!res.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return res.json();
+    })
     .then(data => {
         closeModal();
         if (data.success) {
-            Swal.fire("Success", data.message, "success");
+            Swal.fire({
+                icon: 'success',
+                title: 'Application Submitted!',
+                text: data.message,
+                confirmButtonText: 'OK'
+            });
         } else {
-            Swal.fire("Error", data.message, "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Application Failed',
+                text: data.message,
+                confirmButtonText: 'OK'
+            });
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        closeModal();
+        Swal.fire({
+            icon: 'error',
+            title: 'Application Error',
+            text: 'Something went wrong. Please try again.',
+            confirmButtonText: 'OK'
+        });
     });
 }
+
+// Close modal when clicking outside content
+document.getElementById('applicationModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        closeModal();
+    }
+});
+
+// Add event listener for Escape key to close modal
+document.addEventListener('keydown', function(e) {
+    const modal = document.getElementById('applicationModal');
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+        closeModal();
+    }
+});
 
         function saveJob(jobId) {
             // Check if user is logged in

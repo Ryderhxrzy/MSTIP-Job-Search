@@ -22,7 +22,37 @@ session_start();
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <style>
-        
+        .modal {
+  position: fixed;
+  top: 0; left: 0; right:0; bottom:0;
+  background: rgba(0,0,0,0.6);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+.modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 600px;
+  width: 100%;
+}
+.close-btn {
+  float:right;
+  font-size: 24px;
+  cursor:pointer;
+}
+#graduateInfo p { margin:6px 0; }
+.btn-confirm {
+  background:#007bff;
+  color:#fff;
+  border:none;
+  padding:10px 16px;
+  border-radius:6px;
+  cursor:pointer;
+  margin-top:15px;
+}
     </style>
 </head>
 <body>
@@ -367,6 +397,15 @@ session_start();
         </div>
     </main>
 
+    <div id="applicationModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2>Confirm Application</h2>
+        <div id="graduateInfo"></div>
+        <button id="confirmApplyBtn" class="btn-confirm">Submit Application</button>
+    </div>
+    </div>
+
     <?php include_once('includes/footer.php'); ?>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/profile.js"></script>
@@ -436,9 +475,63 @@ session_start();
         }
 
         function applyJob(jobId) {
-            alert('Apply for job ID: ' + jobId);
-            // window.location.href = 'apply.php?job_id=' + jobId;
+    <?php if (!isset($_SESSION['logged_in']) || $_SESSION['user_type'] !== 'Graduate'): ?>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Login Required',
+            text: 'Please login as a graduate to apply.',
+            confirmButtonText: 'OK'
+        });
+        return;
+    <?php endif; ?>
+
+    // Fetch graduate info via AJAX
+    fetch('action/fetch-graduate-info.php')
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            let infoHtml = `
+                <p><strong>Name:</strong> ${data.first_name} ${data.middle_name ?? ''} ${data.last_name}</p>
+                <p><strong>Phone:</strong> ${data.phone_number}</p>
+                <p><strong>Course:</strong> ${data.course}</p>
+                <p><strong>Year Graduated:</strong> ${data.year_graduated}</p>
+                <p><strong>Skills:</strong> ${data.skills ?? 'N/A'}</p>
+                <p><strong>LinkedIn:</strong> <a href="${data.linkedin_profile}" target="_blank">View Profile</a></p>
+                <p><strong>Resume:</strong> <a href="uploads/resumes/${data.resume}" target="_blank">View Resume</a></p>
+            `;
+            document.getElementById('graduateInfo').innerHTML = infoHtml;
+            document.getElementById('applicationModal').style.display = 'flex';
+
+            // Attach jobId to confirm button
+            document.getElementById('confirmApplyBtn').onclick = function() {
+                confirmApplication(jobId);
+            };
+        } else {
+            Swal.fire("Error", "Unable to fetch your information.", "error");
         }
+    });
+}
+
+function closeModal() {
+    document.getElementById('applicationModal').style.display = 'none';
+}
+
+function confirmApplication(jobId) {
+    fetch('action/apply-job-handler.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: 'job_id=' + jobId
+    })
+    .then(res => res.json())
+    .then(data => {
+        closeModal();
+        if (data.success) {
+            Swal.fire("Success", data.message, "success");
+        } else {
+            Swal.fire("Error", data.message, "error");
+        }
+    });
+}
 
         function saveJob(jobId) {
             // Check if user is logged in

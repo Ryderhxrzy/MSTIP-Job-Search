@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
 </head>
 <body>
@@ -139,6 +141,7 @@
     </main>
 
     <?php include_once('includes/footer.php'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="assets/js/script.js"></script>
     <script src="assets/js/profile.js"></script>
@@ -421,8 +424,10 @@
 
             isSearchActive = true;
 
-            // Hide newsletter
-            document.querySelector('.newsletter').style.display = 'none';
+            const newsletter = document.querySelector('.newsletter');
+            if (newsletter) {
+                newsletter.style.display = 'none';
+            }
 
             // Determine if search is for company or job title
             const isCompanySearch = companiesData.some(function(company) {
@@ -651,6 +656,7 @@
                     '<h3>Job Description</h3>' +
                     '<p class="job-description">' + job.description + '</p>' +
                 '</div>' +
+                
                 '<div class="job-details-section">' +
                     '<h3>Job Details</h3>' +
                     '<div class="job-meta-block">' +
@@ -772,7 +778,7 @@
             // Job description
             '<div class="job-description-section">' +
                 '<h5>Job Description</h5>' +
-                '<p class="job-description-text">' + shortDescription + '</p>' +
+                '<p class="job-description-text">' + job.description + '</p>' +
             '</div>' +
 
             // Qualifications (if available)
@@ -828,9 +834,57 @@
         }
 
         function saveJob(jobId) {
-            // Save job to user's saved jobs
-            alert('Job saved! ID: ' + jobId);
-            // Implement save functionality here
+            // Check if user is logged in
+            <?php if (!isset($_SESSION['logged_in']) || $_SESSION['user_type'] !== 'Graduate'): ?>
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Login Required',
+                    text: 'Please login as a graduate to save jobs.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            <?php endif; ?>
+
+            // Send AJAX request to save job
+            fetch('action/save-job-handler.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'job_id=' + jobId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Saved!',
+                        text: data.message,
+                        confirmButtonText: 'View Saved Jobs',
+                        showCancelButton: true,
+                        cancelButtonText: 'Continue Browsing'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'save-jobs.php';
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.message,
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong. Please try again.',
+                    confirmButtonText: 'OK'
+                });
+            });
         }
 
         // Reset search and go back to browse companies
@@ -842,7 +896,10 @@
             document.getElementById('searchInput').value = '';
             document.getElementById('locationInput').value = '';
 
-            document.querySelector('.newsletter').style.display = 'block';
+            const newsletter = document.querySelector('.newsletter');
+            if (newsletter) {
+                newsletter.style.display = 'none';
+            }
             
             // Return search form to original position if it's sticky
             if (searchForm.classList.contains('sticky')) {

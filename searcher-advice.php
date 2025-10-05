@@ -20,16 +20,16 @@
     <?php include_once('includes/header.php') ?>
 
     <main>
-        <section class="main-hero">
-            <div class="container">
+        <section class="advice-hero">
+                    <div class="container">
                 <h1 class="section-titles">Searcher Advice</h1>
                 <p class="section-subtitle">Tips and strategies to help you find the right job faster and grow your career.</p>
-            </div>
-            <!-- Decorative pattern behind hero -->
-             <svg class="pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
+                    </div>
+                    
+                    <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
                         <path fill="rgba(255,123,0,0.05)" d="M0,160 C480,280 960,40 1440,160 L1440,400 L0,400 Z"></path>
                     </svg>
-        </section>
+                </section>
 
         <!-- How It Works -->
         <section class="how-it-works">

@@ -130,6 +130,16 @@ if (isset($_GET['toggle_status'])) {
     <?php include_once('../../includes/log-employer-header.php') ?>
 
     <main>
+        <section class="advice-hero">
+            <div class="container">
+                <h1 class="section-titles">Manage Jobs</h1>
+                <p class="section-subtitle">View, edit, and track all your active and archived job postings in one place.</p>
+            </div>
+            <!-- Decorative pattern behind hero -->
+            <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
+                <path fill="rgba(255,123,0,0.05)" d="M0,160 C480,280 960,40 1440,160 L1440,400 L0,400 Z"></path>
+            </svg>
+        </section>
         <div class="jobs-container">
             <div class="card">
                 <div class="card-headers">

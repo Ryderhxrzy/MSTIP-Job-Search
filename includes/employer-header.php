@@ -1,14 +1,11 @@
 <?php 
     include_once('../../includes/db_connect.php');
-    session_start();
 
     $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer';
     $userEmail = $isLoggedIn ? $_SESSION['email'] : '';
     $userCode = $isLoggedIn ? $_SESSION['user_code'] : '';
 
-    // Function to get profile picture URL
     function getProfilePicture($userCode) {
-        // Check if profile picture exists in database or file system
         $profilePicPath = "../../assets/images/profiles/" . $userCode . ".jpg";
         $defaultProfilePic = "../../assets/images/default-profile.jpg";
         
@@ -97,7 +94,7 @@
                             <span class="action-separator">/</span>
                             
                             <!-- Post a Job Button -->
-                            <a href="post-job.php" class="employer-link">Post a Job</a>
+                            <a href="post-a-job.php" class="employer-link">Post a Job</a>
                         </div>
                     <?php else: ?>
                         <!-- Show login button and Post a Job when not logged in -->
@@ -156,7 +153,7 @@
                             Logout
                         </a>
 
-                        <a href="post-job.php" class="employer-link">Post a Job</a>
+                        <a href="post-a-job.php" class="employer-link">Post a Job</a>
                     </div>
                 <?php else: ?>
                     <!-- Mobile login and Post a Job when not logged in -->

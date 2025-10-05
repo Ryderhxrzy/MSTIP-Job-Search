@@ -86,7 +86,7 @@
                                         Company Profile
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a href="../../logout.php" class="dropdown-item logout-item">
+                                    <a href="logout.php" class="dropdown-item logout-item">
                                         <i class="fas fa-sign-out-alt"></i>
                                         Logout
                                     </a>
@@ -97,14 +97,14 @@
                             <span class="action-separator">/</span>
                             
                             <!-- Post a Job Button -->
-                            <a href="post-job.php" class="employer-link">Post a Job</a>
+                            <a href="pages/employer/employer-home.php" class="employer-link">Employer Page</a>
                         </div>
                     <?php else: ?>
                         <!-- Show login button and Post a Job when not logged in -->
                         <div class="logged-out-actions">
-                            <a href="../../employer-login.php" class="btn btn-outline">Log In</a>
+                            <a href="login.php" class="btn btn-outline">Log In</a>
                             <span class="action-separator">/</span>
-                            <a href="../../employer-register.php" class="employer-link">Post a Job</a>
+                            <a href="pages/employer/employer-home.php" class="employer-link">Employer Page</a>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -150,7 +150,7 @@
                             Company Profile
                         </a>
                         
-                        <a href="../../logout.php" class="mobile-nav-link logout-mobile">
+                        <a href="logout.php" class="mobile-nav-link logout-mobile">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
@@ -160,8 +160,8 @@
                 <?php else: ?>
                     <!-- Mobile login and Post a Job when not logged in -->
                     <div class="mobile-user-actions">
-                        <a href="../../employer-login.php" class="btn btn-outline btn-block">Log In</a>
-                        <a href="../../employer-register.php" class="employer-link btn-block">Post a Job</a>
+                        <a href="login.php" class="btn btn-outline btn-block">Log In</a>
+                        <a href="pages/employer/employer-home.php" class="employer-link">Employer Page</a>
                     </div>
                 <?php endif; ?>
             </div>

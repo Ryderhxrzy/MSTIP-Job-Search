@@ -104,11 +104,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-container">
         <div class="login-box">
             <div class="logo">
-                <a href="index.php">
+                <a href="employer-home.php">
                     <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>
-                        <span class="logo-subtitle">Job Search</span>
+                        <span class="logo-subtitle">Seek Employee</span>
                     </div>
                 </a>
             </div>
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <p class="employer-links">
                 <a href="login.php">
                     <i class="fas fa-user" style="margin-right: 0.5rem;"></i>
-                    Are you a Graduate?
+                    Are you a Job Searcher?
                 </a>
             </p>
         </div>

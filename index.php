@@ -571,7 +571,8 @@
             panel.innerHTML = '<div class="company-details-header">' +
                     '<img src="' + logoPath + '" alt="' + company.name + '" class="company-logo-large" onerror="this.src=\'assets/images/background1.jpeg\'">' +
                     '<div class="company-header-info">' +
-                        '<h2>' + company.name + '</h2>' +
+                                '<h2><a href="company-details.php?id=' + company.id + '" class="company-name-link">' + company.name + '</a></h2>' +
+
                         '<div class="company-header-meta">' +
                             '<div class="meta-item">' +
                                 '<i class="fas fa-industry"></i>' +

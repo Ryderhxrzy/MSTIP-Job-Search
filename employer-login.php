@@ -1,7 +1,14 @@
 <?php
 session_start();
 include_once('includes/db_connect.php');
+
+// ✅ Handle logout (optional cookie clearing)
 if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
+    // Clear cookie
+    setcookie('employer_remember', '', time() - 3600, '/');
+    session_unset();
+    session_destroy();
+
     echo '
     <script>
     document.addEventListener("DOMContentLoaded", function() {
@@ -16,7 +23,43 @@ if (isset($_GET['logout']) && $_GET['logout'] === 'success') {
     </script>
     ';
 }
-// Handle form submission
+
+// ✅ Check "Remember Me" cookie before anything else
+if (!isset($_SESSION['logged_in']) && isset($_COOKIE['employer_remember'])) {
+    $remember_token = $_COOKIE['employer_remember'];
+
+    $stmt = $conn->prepare("SELECT id, user_id, email_address, user_type, status FROM users WHERE user_id = ? LIMIT 1");
+    $stmt->bind_param("s", $remember_token);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result && $result->num_rows > 0) {
+        $user = $result->fetch_assoc();
+        if ($user['user_type'] === 'Employer' && $user['status'] === 'Active') {
+            // Restore session
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_code'] = $user['user_id'];
+            $_SESSION['email'] = $user['email_address'];
+            $_SESSION['user_type'] = $user['user_type'];
+            $_SESSION['logged_in'] = true;
+
+            // Renew cookie (extend for another 30 days)
+            setcookie('employer_remember', $user['user_id'], time() + (86400 * 30), '/');
+
+            header('Location: pages/employer/employer-home.php');
+            exit;
+        }
+    }
+    $stmt->close();
+}
+
+// ✅ Check if session already active
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer') {
+    header('Location: pages/employer/employer-home.php');
+    exit;
+}
+
+// ✅ Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     
@@ -35,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     
-    // Check if user exists and get user data
+    // Query user
     $stmt = $conn->prepare("SELECT id, user_id, email_address, password, user_type, status FROM users WHERE email_address = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -49,45 +92,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $result->fetch_assoc();
     $stmt->close();
     
-    // Verify password
+    // Password check
     if (!password_verify($password, $user['password'])) {
         echo json_encode(['success' => false, 'message' => 'Invalid email or password']);
         exit;
     }
     
-    // Check if user type is Employer
+    // Ensure employer
     if ($user['user_type'] !== 'Employer') {
         echo json_encode(['success' => false, 'message' => 'Access denied. This login is for employers only.']);
         exit;
     }
     
-    // Check if account is active
+    // Check account status
     if ($user['status'] !== 'Active') {
         echo json_encode(['success' => false, 'message' => 'Your account has been deactivated. Please contact support.']);
         exit;
     }
     
-    // Set session variables
+    // ✅ Create session
     $_SESSION['user_id'] = $user['id'];
     $_SESSION['user_code'] = $user['user_id'];
     $_SESSION['email'] = $user['email_address'];
     $_SESSION['user_type'] = $user['user_type'];
     $_SESSION['logged_in'] = true;
     
-    // Handle remember me
+    // ✅ Handle Remember Me
     if ($remember) {
-        // Set cookie for 30 days
         setcookie('employer_remember', $user['user_id'], time() + (86400 * 30), '/');
+    } else {
+        // Ensure cookie is cleared if previously set
+        setcookie('employer_remember', '', time() - 3600, '/');
     }
-    
+
     echo json_encode(['success' => true, 'message' => 'Login successful! Redirecting...']);
     $conn->close();
-    exit;
-}
-
-// Check if user is already logged in
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer') {
-    header('Location: dashboard.php');
     exit;
 }
 ?>
@@ -106,14 +145,13 @@ if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSIO
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <!-- ================= Enhanced Login Page ================= -->
     <div class="login-container">
         <div class="login-box">
             <div class="logo">
-                <a href="index.php">
+                <a href="employer-home.php">
                     <img src="assets/images/mstip_logo.png" alt="MSTIP Logo" class="logo-img">
                     <div class="logo-text">
                         <span class="logo-title">MSTIP</span>

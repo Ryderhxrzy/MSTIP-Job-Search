@@ -40,7 +40,7 @@
                             <p>Complete your profile with accurate information and your updated resume to attract potential employers.</p>
                         </div>
                         <div class="step-image">
-                            <img src="assets/images/background1.jpeg" alt="Create Profile">
+                            <img src="assets/images/searcher_register.png" alt="Create Profile">
                         </div>
                     </div>
 

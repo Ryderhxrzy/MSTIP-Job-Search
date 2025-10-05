@@ -1,4 +1,6 @@
-<?php include_once('includes/db_connect.php') ?>
+<?php 
+    include_once('includes/db_connect.php') 
+?>
 
 <!DOCTYPE html>
 <html lang="en">

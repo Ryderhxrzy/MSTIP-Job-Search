@@ -759,7 +759,7 @@
     background: var(--surface-color);
     padding: 1.5rem;
     border-radius: 12px;
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--primary-border);
     text-align: center;
 }
 
@@ -769,7 +769,7 @@
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 1rem;
-    border: 2px solid var(--primary-color);
+    border: 2px solid var(--primary-border);
 }
 
 .team-member h4 {

@@ -38,7 +38,7 @@
                             <p>Create your employer account in minutes and set up your company profile. Showcase your business details, company culture, and what makes your organization a great place to work to attract top talent.</p>
                         </div>
                         <div class="step-image">
-                            <img src="../../assets/images/register.png" alt="Register your company">
+                            <img src="../../assets/images/employer_register.png" alt="Register your company">
                         </div>
                     </div>
 

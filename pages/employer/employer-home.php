@@ -1,3 +1,23 @@
+<?php 
+  include_once('../../includes/db_connect.php');
+  session_start();
+
+  $isLoggedIn = false;
+
+  if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer') {
+      $isLoggedIn = true;
+  } elseif (isset($_COOKIE['employer_remember'])) {
+      // Optional: verify cookie exists in database before trusting it
+      $userCode = $_COOKIE['employer_remember'];
+      $stmt = $conn->prepare("SELECT id FROM users WHERE user_id = ? AND user_type = 'Employer' AND status = 'Active'");
+      $stmt->bind_param("s", $userCode);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      if ($result->num_rows > 0) $isLoggedIn = true;
+      $stmt->close();
+  }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,7 +50,7 @@
     <div class="hero-content">
       <h1 class="hero-title">Hire the Right Talent Faster with MSTIP</h1>
       <p class="hero-subtitle">Post jobs, reach thousands of qualified candidates, and build your winning team in just a few steps.</p>
-      <a href="employer-register.php" class="btn-primarys">Get Started</a>
+      <a href="../../employer-register.php" class="btn-primarys">Get Started</a>
 
       <!-- Stats Row -->
       <div class="hero-stats">
@@ -130,12 +150,19 @@
           <!-- Logos marquee -->
           <div class="logos-wrapper">
             <div class="logos-track">
-              <img src="../../assets/images/mstip_logo.png" alt="Company 1">
-              <img src="../../assets/images/mstip_logo.png" alt="Company 2">
-              <img src="../../assets/images/mstip_logo.png" alt="Company 3">
-              <img src="../../assets/images/mstip_logo.png" alt="Company 4">
-              <img src="../../assets/images/mstip_logo.png" alt="Company 5">
-              <img src="../../assets/images/mstip_logo.png" alt="Company 5">
+              <?php
+                $query = "SELECT profile_picture FROM companies WHERE profile_picture IS NOT NULL AND profile_picture != ''";
+                $result = mysqli_query($conn, $query);
+
+                if ($result && mysqli_num_rows($result) > 0) {
+                  while ($row = mysqli_fetch_assoc($result)) {
+                    $imagePath = "../../assets/images/" . htmlspecialchars($row['profile_picture']);
+                    echo '<img src="' . $imagePath . '" alt="Company Logo">';
+                  }
+                } else {
+                  echo '<p style="color: #888;">No company logos available.</p>';
+                }
+              ?>
             </div>
 
             <!-- Gradient fade edges -->
@@ -168,24 +195,28 @@
         </section>
 
         <!-- Call to Action -->
-        <section class="cta">
+        <?php if (!$isLoggedIn): ?>
+          <section class="cta">
             <div class="container">
-                <h2 class="newsletter-title">Ready to Hire Your Next Star Employee?</h2>
-                <p class="newsletter-subtitle">
-                    Join thousands of companies already hiring top talent. Post jobs, connect with skilled candidates, and start <br>building your winning team today.
-                </p>
-                <form class="email-login-form">
-                    <div class="email-input-wrapper">
-                        <input type="email" placeholder="Enter your email" required>
-                        <button type="submit" class="btn-primary">Register</button>
-                    </div>
-                </form>
-                <p class="newsletter-hint">
-                    Learn more about 
-                    <a href="#" class="register-link">MSTIP</a>
-                </p>
+              <h2 class="newsletter-title">Ready to Hire Your Next Star Employee?</h2>
+              <p class="newsletter-subtitle">
+                Join thousands of companies already hiring top talent. Post jobs, connect with skilled candidates, and start <br>
+                building your winning team today.
+              </p>
+              <form class="email-login-form">
+                <div class="email-input-wrapper">
+                  <input type="email" placeholder="Enter your email" required>
+                  <button type="submit" class="btn-primary">Register</button>
+                </div>
+              </form>
+              <p class="newsletter-hint">
+                Learn more about 
+                <a href="#" class="register-link">MSTIP</a>
+              </p>
             </div>
-        </section>
+          </section>
+          <?php endif; ?>
+
 
     </main>
 

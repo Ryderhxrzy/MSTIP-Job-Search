@@ -157,7 +157,7 @@
                             <i class="fas fa-bookmark"></i>
                             Save Jobs
                         </a>
-                        <a href="logout.php" class="mobile-nav-link logout-mobile">
+                        <a href="graduate_logout.php" class="mobile-nav-link logout-mobile">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>

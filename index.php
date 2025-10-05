@@ -1,5 +1,7 @@
 <?php 
     session_start(); 
+            $isGraduate = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Graduate';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -116,21 +118,24 @@
         </section>
 
         <!-- Newsletter Section -->
-        <section class="newsletter">
-            <div class="container">
-                <h2 class="newsletter-title">Login to Your JobFinder Account</h2>
-                <p class="newsletter-subtitle">Access your personalized job alerts, saved applications, and career dashboard quickly and securely.</p>
-                <form class="email-login-form">
-                <div class="email-input-wrapper">
-                    <input type="email" placeholder="Enter your email" required>
-                    <button type="submit" class="btn-primary">Sign in</button>
+        <?php
+            if (!$isGraduate): ?>
+            <section class="newsletter">
+                <div class="container">
+                    <h2 class="newsletter-title">Login to Your JobFinder Account</h2>
+                    <p class="newsletter-subtitle">Access your personalized job alerts, saved applications, and career dashboard quickly and securely.</p>
+                    <form class="email-login-form">
+                        <div class="email-input-wrapper">
+                            <input type="email" placeholder="Enter your email" required>
+                            <button type="submit" class="btn-primary">Sign in</button>
+                        </div>
+                    </form>
+                    <p class="newsletter-hint">Don't have an account?
+                        <a href="#" class="register-link">Register here</a>
+                    </p>
                 </div>
-                </form>
-                <p class="newsletter-hint">Don't have an account?
-                <a href="#" class="register-link">Register here</a>
-                </p>
-            </div>
-        </section>
+            </section>
+        <?php endif; ?>
     </main>
 
     <?php include_once('includes/footer.php'); ?>

@@ -93,5 +93,7 @@
     </main>
 
     <?php include_once('includes/footer.php') ?>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/profile.js"></script>
 </body>
 </html>

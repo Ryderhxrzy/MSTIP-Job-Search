@@ -60,7 +60,7 @@
                         About Us
                     </a>
                 </li>
-                 <li class="nav-item">
+                <li class="nav-item">
                     <a href="contact.php" class="nav-link" data-page="about">
                         Contact
                     </a>
@@ -81,9 +81,13 @@
                                     <i class="fas fa-chevron-down dropdown-arrow"></i>
                                 </button>
                                 <div class="profile-dropdown-menu" id="profileDropdown">
-                                    <a href="company-profile.php" class="dropdown-item">
+                                    <a href="my-profile.php" class="dropdown-item">
                                         <i class="fas fa-user"></i>
-                                        Company Profile
+                                        My Profile
+                                    </a>
+                                    <a href="save-jobs.php" class="dropdown-item">
+                                        <i class="fas fa-bookmark"></i>
+                                        Save Jobs
                                     </a>
                                     <div class="dropdown-divider"></div>
                                     <a href="logout.php" class="dropdown-item logout-item">
@@ -97,7 +101,7 @@
                             <span class="action-separator">/</span>
                             
                             <!-- Post a Job Button -->
-                            <a href="pages/employer/employer-home.php" class="employer-link">Employer Page</a>
+                            <a href="my-application.php" class="employer-link">My Application</a>
                         </div>
                     <?php else: ?>
                         <!-- Show login button and Post a Job when not logged in -->
@@ -145,17 +149,20 @@
                         </div>
                         
                         <!-- Profile Links -->
-                        <a href="company-profile.php" class="mobile-nav-link">
+                        <a href="my-profile.php" class="mobile-nav-link">
                             <i class="fas fa-user"></i>
-                            Company Profile
+                            My Profile
                         </a>
-                        
+                        <a href="save-jobs.php" class="mobile-nav-link">
+                            <i class="fas fa-bookmark"></i>
+                            Save Jobs
+                        </a>
                         <a href="logout.php" class="mobile-nav-link logout-mobile">
                             <i class="fas fa-sign-out-alt"></i>
                             Logout
                         </a>
 
-                        <a href="pages/employer/employer-home.php" class="employer-link">Employer Page</a>
+                        <a href="my-application.php" class="employer-link">My Application</a>
                     </div>
                 <?php else: ?>
                     <!-- Mobile login and Post a Job when not logged in -->

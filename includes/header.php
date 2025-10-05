@@ -1,7 +1,7 @@
 <?php 
     include_once('includes/db_connect.php');
 
-    $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer';
+    $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Graduate';
     $userEmail = $isLoggedIn ? $_SESSION['email'] : '';
     $userCode = $isLoggedIn ? $_SESSION['user_code'] : '';
 
@@ -155,7 +155,7 @@
                             Logout
                         </a>
 
-                        <a href="post-job.php" class="employer-link">Post a Job</a>
+                        <a href="pages/employer/employer-home.php" class="employer-link">Employer Page</a>
                     </div>
                 <?php else: ?>
                     <!-- Mobile login and Post a Job when not logged in -->

@@ -1,5 +1,86 @@
 <?php 
-    include_once('includes/db_connect.php') 
+include_once('includes/db_connect.php');
+
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    header('Content-Type: application/json');
+    
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirmPassword = $_POST['confirmPassword'];
+    
+    // Validation
+    if (empty($email) || empty($password) || empty($confirmPassword)) {
+        echo json_encode(['success' => false, 'message' => 'All fields are required']);
+        exit;
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['success' => false, 'message' => 'Invalid email format']);
+        exit;
+    }
+    
+    if (!str_ends_with($email, '@mstip.edu.ph')) {
+        echo json_encode(['success' => false, 'message' => 'Only @mstip.edu.ph email addresses are accepted']);
+        exit;
+    }
+    
+    if ($password !== $confirmPassword) {
+        echo json_encode(['success' => false, 'message' => 'Passwords do not match']);
+        exit;
+    }
+    
+    if (strlen($password) <= 6) {
+        echo json_encode(['success' => false, 'message' => 'Password must be at least 7 characters long']);
+        exit;
+    }
+    
+    // Check if email already exists
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email_address = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        echo json_encode(['success' => false, 'message' => 'Email already registered']);
+        exit;
+    }
+    $stmt->close();
+    
+    // Generate unique user_id (E000000 format)
+    $user_id = 'G' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+    
+    // Check if user_id exists (rare case)
+    $stmt = $conn->prepare("SELECT id FROM users WHERE user_id = ?");
+    $stmt->bind_param("s", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    while ($result->num_rows > 0) {
+        $user_id = 'G' . str_pad(mt_rand(1, 999999), 6, '0', STR_PAD_LEFT);
+        $stmt->bind_param("s", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    }
+    $stmt->close();
+    
+    // Hash password
+    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+    
+    // Insert into database
+    $stmt = $conn->prepare("INSERT INTO users (user_id, email_address, password, user_type, status) VALUES (?, ?, ?, 'Graduate', 'Active')");
+    $stmt->bind_param("sss", $user_id, $email, $hashed_password);
+    
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true, 'message' => 'Registration successful! Redirecting to login...']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Registration failed. Please try again.']);
+    }
+    
+    $stmt->close();
+    $conn->close();
+    exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +97,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
 </head>
 <body>
     <!-- ================= Register Page ================= -->
@@ -37,10 +117,6 @@
 
             <!-- Register Form -->
             <form class="login-form" method="POST" id="registerForm">
-                <div class="form-group">
-                    <input type="text" id="fullname" name="fullname" placeholder="Full Name *" required>
-                    <small class="error-message" id="nameError"></small>
-                </div>
                 <div class="form-group">
                     <input type="email" id="email" name="email" placeholder="Enter your email address *" required>
                     <small class="error-message" id="emailError"></small>
@@ -80,5 +156,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script src="assets/js/reg-script.js"></script>
 </body>
 </html>

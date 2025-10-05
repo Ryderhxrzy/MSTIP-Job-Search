@@ -1,3 +1,6 @@
+<?php 
+    session_start(); 
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -133,6 +136,7 @@
     <?php include_once('includes/footer.php'); ?>
 
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/profile.js"></script>
     <script>
         // Get companies data from PHP
         var companiesData = [

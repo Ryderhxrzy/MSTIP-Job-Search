@@ -8,8 +8,8 @@ $_SESSION = array();
 session_destroy();
 
 // Clear remember me cookie
-if (isset($_COOKIE['employer_remember'])) {
-    setcookie('employer_remember', '', time() - 3600, '/');
+if (isset($_COOKIE['graduate_remember'])) {
+    setcookie('graduate_remember', '', time() - 3600, '/');
 }
 
 // Redirect to login page

@@ -90,7 +90,7 @@
                                         Save Jobs
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <a href="logout.php" class="dropdown-item logout-item">
+                                    <a href="graduate_logout.php" class="dropdown-item logout-item">
                                         <i class="fas fa-sign-out-alt"></i>
                                         Logout
                                     </a>

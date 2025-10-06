@@ -413,22 +413,6 @@ if (!empty($applications)) {
                         </div>
                     </div>
 
-                    <!-- Debug Info (Remove after testing) -->
-                    <?php if (false): // Change to true to see debug info ?>
-                    <div style="background: #f0f0f0; padding: 1rem; margin-bottom: 1rem; border-radius: 5px;">
-                        <strong>Debug Info:</strong><br>
-                        Total Applications: <?php echo count($applications); ?><br>
-                        <?php 
-                        if (!empty($applications)) {
-                            echo "Statuses found: ";
-                            foreach ($applications as $app) {
-                                echo "'" . $app['status'] . "' ";
-                            }
-                        }
-                        ?>
-                    </div>
-                    <?php endif; ?>
-
                     <!-- Filter Tabs -->
                     <div class="filter-tabs">
                         <div class="filter-tab active" data-filter="all">All Applications</div>

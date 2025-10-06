@@ -51,7 +51,7 @@
                             <p>Publish your job listings with detailed descriptions, requirements, and benefits. Your postings will reach thousands of qualified candidates across the Philippines instantly, helping you find the perfect match faster.</p>
                         </div>
                         <div class="step-image">
-                            <img src="../../assets/images/background1.jpeg" alt="Post job openings">
+                            <img src="../../assets/images/post_job.png" alt="Post job openings">
                         </div>
                     </div>
 

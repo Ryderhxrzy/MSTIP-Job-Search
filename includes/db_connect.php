@@ -3,7 +3,7 @@
 $host = "localhost";     // Database host
 $user = "root";          // Database username
 $pass = "";              // Database password
-$db   = "MSTIP_NEW";         // Database name
+$db   = "mstip_db";         // Database name
 
 $conn = new mysqli($host, $user, $pass, $db);
 

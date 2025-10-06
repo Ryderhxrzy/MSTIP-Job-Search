@@ -6,15 +6,6 @@
 
   if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer') {
       $isLoggedIn = true;
-  } elseif (isset($_COOKIE['employer_remember'])) {
-      // Optional: verify cookie exists in database before trusting it
-      $userCode = $_COOKIE['employer_remember'];
-      $stmt = $conn->prepare("SELECT id FROM users WHERE user_id = ? AND user_type = 'Employer' AND status = 'Active'");
-      $stmt->bind_param("s", $userCode);
-      $stmt->execute();
-      $result = $stmt->get_result();
-      if ($result->num_rows > 0) $isLoggedIn = true;
-      $stmt->close();
   }
 ?>
 

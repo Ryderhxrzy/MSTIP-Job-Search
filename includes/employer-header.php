@@ -1,15 +1,8 @@
 <?php 
     include_once('../../includes/db_connect.php');
-
-    // Check if user is logged in as Employer, redirect to login if not
-    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || $_SESSION['user_type'] !== 'Employer') {
-        header("Location: ../../employer-login.php");
-        exit();
-    }
     $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer';
-
-    $userEmail = $_SESSION['email'];
-    $userCode = $_SESSION['user_code'];
+    $userEmail = $isLoggedIn ? $_SESSION['email'] : '';
+    $userCode = $isLoggedIn ? $_SESSION['user_code'] : '';
 
     // Function to get profile picture URL for Employer
     function getProfilePicture($userCode) {

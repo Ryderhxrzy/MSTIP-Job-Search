@@ -7,15 +7,28 @@
 
     // Function to get profile picture URL
     function getProfilePicture($userCode) {
-        // Check if profile picture exists in database or file system
-        $profilePicPath = "assets/images/profiles/" . $userCode . ".jpg";
+        global $conn;
+        
         $defaultProfilePic = "assets/images/default-profile.jpg";
         
-        if (file_exists($profilePicPath)) {
-            return $profilePicPath;
-        } else {
-            return $defaultProfilePic;
+        // Query the database for the profile picture
+        $stmt = $conn->prepare("SELECT profile FROM graduate_information WHERE user_id = ?");
+        $stmt->bind_param("s", $userCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if (!empty($row['profile'])) {
+                $profilePicPath = "assets/images/" . $row['profile'];
+                // Check if file actually exists
+                if (file_exists($profilePicPath)) {
+                    return $profilePicPath;
+                }
+            }
         }
+        
+        return $defaultProfilePic;
     }
 ?>
 

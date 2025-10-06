@@ -56,7 +56,7 @@
                             <p>Use filters to find jobs that match your skills, location, and desired salary range.</p>
                         </div>
                         <div class="step-image">
-                            <img src="assets/images/background1.jpeg" alt="Search Jobs">
+                            <img src="assets/images/search_filter.png" alt="Search Jobs">
                         </div>
                     </div>
 
@@ -67,7 +67,7 @@
                             <p>Submit applications with a personalized message and ensure your resume is tailored for each job.</p>
                         </div>
                         <div class="step-image">
-                            <img src="assets/images/background1.jpeg" alt="Apply Jobs">
+                            <img src="assets/images/apply.png" alt="Apply Jobs">
                         </div>
                     </div>
 
@@ -78,7 +78,7 @@
                             <p>Monitor your applications, follow up when necessary, and stay organized during your job search.</p>
                         </div>
                         <div class="step-image">
-                            <img src="assets/images/background1.jpeg" alt="Track Applications">
+                            <img src="assets/images/track_application.png" alt="Track Applications">
                         </div>
                     </div>
                 </div>

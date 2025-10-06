@@ -1,19 +1,39 @@
 <?php 
     include_once('../../includes/db_connect.php');
 
-    $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer';
-    $userEmail = $isLoggedIn ? $_SESSION['email'] : '';
-    $userCode = $isLoggedIn ? $_SESSION['user_code'] : '';
+    // Check if user is logged in as Employer, redirect to login if not
+    if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || $_SESSION['user_type'] !== 'Employer') {
+        header("Location: ../../employer-login.php");
+        exit();
+    }
 
+    $userEmail = $_SESSION['email'];
+    $userCode = $_SESSION['user_code'];
+
+    // Function to get profile picture URL for Employer
     function getProfilePicture($userCode) {
-        $profilePicPath = "../../assets/images/profiles/" . $userCode . ".jpg";
+        global $conn;
+        
         $defaultProfilePic = "../../assets/images/default-profile.jpg";
         
-        if (file_exists($profilePicPath)) {
-            return $profilePicPath;
-        } else {
-            return $defaultProfilePic;
+        // Query the companies table for the profile picture
+        $stmt = $conn->prepare("SELECT profile_picture FROM companies WHERE user_id = ?");
+        $stmt->bind_param("s", $userCode);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            if (!empty($row['profile_picture'])) {
+                $profilePicPath = "../../assets/images/" . $row['profile_picture'];
+                // Check if file actually exists
+                if (file_exists($profilePicPath)) {
+                    return $profilePicPath;
+                }
+            }
         }
+        
+        return $defaultProfilePic;
     }
 ?>
 

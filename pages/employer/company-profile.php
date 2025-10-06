@@ -29,17 +29,6 @@ if (isset($_SESSION['profile_error'])) {
     unset($_SESSION['profile_error']);
 }
 
-if (isset($_SESSION['password_success'])) {
-    $show_password_success = true;
-    unset($_SESSION['password_success']);
-}
-
-if (isset($_SESSION['password_error'])) {
-    $show_password_error = true;
-    $password_error_msg = $_SESSION['password_error'];
-    unset($_SESSION['password_error']);
-}
-
 // Fetch company profile data
 $company = [];
 $stmt = $conn->prepare("SELECT * FROM companies WHERE user_id = ?");
@@ -57,90 +46,6 @@ if ($result->num_rows > 0) {
         'company_culture' => '', 'work_environment' => '', 'benefits' => '',
         'about_company' => '', 'profile_picture' => '', 'cover_image' => ''
     ];
-}
-
-// Handle password change form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
-    
-    // Validate inputs
-    if (empty($current_password) || empty($new_password) || empty($confirm_password)) {
-        $_SESSION['password_error'] = "All password fields are required.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-    
-    // Check if new password matches confirm password
-    if ($new_password !== $confirm_password) {
-        $_SESSION['password_error'] = "New password and confirm password do not match.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-    
-    // Validate password strength
-    if (strlen($new_password) < 8) {
-        $_SESSION['password_error'] = "Password must be at least 8 characters long.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-    
-    if (!preg_match('/[A-Z]/', $new_password)) {
-        $_SESSION['password_error'] = "Password must contain at least one uppercase letter.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-    
-    if (!preg_match('/[a-z]/', $new_password)) {
-        $_SESSION['password_error'] = "Password must contain at least one lowercase letter.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-    
-    if (!preg_match('/[0-9]/', $new_password)) {
-        $_SESSION['password_error'] = "Password must contain at least one number.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
-    
-    // Verify current password
-    $stmt = $conn->prepare("SELECT password FROM users WHERE user_id = ?");
-    $stmt->bind_param("s", $userCode);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        
-        // Check if current password is correct
-        if (password_verify($current_password, $user['password'])) {
-            // Hash new password
-            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
-            
-            // Update password
-            $update_stmt = $conn->prepare("UPDATE users SET password = ? WHERE user_id = ?");
-            $update_stmt->bind_param("ss", $hashed_password, $userCode);
-            
-            if ($update_stmt->execute()) {
-                $_SESSION['password_success'] = true;
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            } else {
-                $_SESSION['password_error'] = "Error updating password. Please try again.";
-                header("Location: " . $_SERVER['PHP_SELF']);
-                exit();
-            }
-        } else {
-            $_SESSION['password_error'] = "Current password is incorrect.";
-            header("Location: " . $_SERVER['PHP_SELF']);
-            exit();
-        }
-    } else {
-        $_SESSION['password_error'] = "User not found.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
-    }
 }
 
 // Handle profile form submission
@@ -421,55 +326,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !isset($_POST['change_password'])) 
                         </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i>&nbsp; Save Profile
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <!-- Change Password Form -->
-            <form method="POST" id="changePasswordForm">
-                <input type="hidden" name="change_password" value="1">
-                <div class="card">
-                    <div class="card-header">
-                        <h2><i class="fas fa-key"></i> Change Password</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <label for="current_password" class="required">Current Password</label>
-                            <div class="password-input-wrapper">
-                                <input type="password" id="current_password" name="current_password">
-                                <button type="button" class="toggle-password" onclick="togglePassword('current_password')">
-                                    <i class="fas fa-eye" id="current_password_icon"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="new_password" class="required">New Password</label>
-                            <div class="password-input-wrapper">
-                                <input type="password" id="new_password" name="new_password">
-                                <button type="button" class="toggle-password" onclick="togglePassword('new_password')">
-                                    <i class="fas fa-eye" id="new_password_icon"></i>
-                                </button>
-                            </div>
-                            <small class="password-hint">
-                                Password must be at least 8 characters and contain uppercase, lowercase, and numbers.
-                            </small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="confirm_password" class="required">Confirm New Password</label>
-                            <div class="password-input-wrapper">
-                                <input type="password" id="confirm_password" name="confirm_password">
-                                <button type="button" class="toggle-password" onclick="togglePassword('confirm_password')">
-                                    <i class="fas fa-eye" id="confirm_password_icon"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="btn-group">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-key"></i>&nbsp; Change Password
                         </button>
                     </div>
                 </div>

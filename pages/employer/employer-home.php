@@ -50,7 +50,11 @@
     <div class="hero-content">
       <h1 class="hero-title">Hire the Right Talent Faster with MSTIP</h1>
       <p class="hero-subtitle">Post jobs, reach thousands of qualified candidates, and build your winning team in just a few steps.</p>
-      <a href="../../employer-register.php" class="btn-primarys">Get Started</a>
+
+      <?php if (!$isLoggedIn): ?>
+                <a href="../../employer-register.php" class="btn-primarys">Get Started</a>
+
+          <?php endif; ?>
 
       <!-- Stats Row -->
       <div class="hero-stats">

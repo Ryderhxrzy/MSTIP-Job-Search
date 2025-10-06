@@ -323,7 +323,7 @@
     border-radius: 0.5rem;
     box-shadow: var(--shadow-lg);
     min-width: 180px;
-    padding: 0.5rem 0;
+    padding: 0.8rem 0;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-10px);
@@ -362,7 +362,7 @@
     display: flex;
     align-items: center;
     gap: 0.20rem;
-    padding: 0.30rem 1rem;
+    padding: 0.50rem 1.5rem;
     text-decoration: none;
     color: var(--text-primary);
     transition: var(--transition);

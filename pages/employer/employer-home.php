@@ -222,57 +222,68 @@
     <script>
      const track = document.querySelector(".logos-track");
 const logos = document.querySelectorAll(".logos-track img");
-let speed = 1;          // bilis ng galaw
-let minSpacing = 40;    // minimum gap sa mobile
+let speed = 1; // bilis ng galaw
+let spacing = 80; // default spacing between logos
 
-function getContainerWidth() {
-  return track.offsetWidth;
+function getSpacing() {
+  // Dynamic spacing based sa screen width
+  if (window.innerWidth <= 480) return 60;
+  if (window.innerWidth <= 768) return 80;
+  return 120; // desktop
 }
 
-// Initialize positions
 function initPositions() {
-  const containerWidth = getContainerWidth();
-  let spacing;
-
-  // Dynamic spacing depende sa screen width at number of logos
-  if (window.innerWidth <= 480) spacing = 60;        // small mobile
-  else if (window.innerWidth <= 768) spacing = 100;  // tablet
-  else spacing = Math.max(minSpacing, containerWidth / logos.length); // desktop
+  spacing = getSpacing();
+  const containerWidth = track.offsetWidth;
 
   logos.forEach((logo, i) => {
+    // Start positions: lahat nakalagay sa kanan with proper spacing
+    logo.style.position = 'absolute';
+    logo.style.left = `${containerWidth + (i * spacing)}px`;
     logo.dataset.index = i;
-    logo.style.left = containerWidth + i * spacing + "px";
   });
-
-  track.dataset.spacing = spacing;
 }
 
 function animate() {
-  const containerWidth = getContainerWidth();
-  const spacing = parseFloat(track.dataset.spacing);
+  const containerWidth = track.offsetWidth;
 
   logos.forEach((logo) => {
-    let current = parseFloat(logo.style.left);
-    current -= speed;
+    let currentLeft = parseFloat(logo.style.left);
+    
+    // Move left
+    currentLeft -= speed;
 
-    // kapag lumampas sa kaliwa, ilipat sa pinakakanan
-    if (current < -logo.width) {
-      let maxX = Math.max(...Array.from(logos).map(l => parseFloat(l.style.left)));
-      current = maxX + spacing;
+    // Kapag lumampas na sa kaliwa (completely out of view)
+    if (currentLeft < -logo.offsetWidth) {
+      // Find yung rightmost logo position
+      let maxRight = -Infinity;
+      logos.forEach((l) => {
+        const pos = parseFloat(l.style.left);
+        if (pos > maxRight) maxRight = pos;
+      });
+      
+      // Ilagay sa kanan ng rightmost logo with proper spacing
+      currentLeft = maxRight + spacing;
     }
 
-    logo.style.left = current + "px";
+    logo.style.left = `${currentLeft}px`;
   });
 
   requestAnimationFrame(animate);
 }
 
-// Run
+// Initialize at start
 initPositions();
 animate();
 
-// Update positions sa window resize
-window.addEventListener("resize", initPositions);
+// Reinitialize on window resize
+let resizeTimer;
+window.addEventListener("resize", () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    initPositions();
+  }, 250);
+});
     </script>
 </body>
 </html>

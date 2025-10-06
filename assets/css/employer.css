@@ -471,7 +471,9 @@
 
 .logos-track {
     position: relative;
-    height: 100%;
+  width: 100%;
+  height: 100px; /* adjust based sa logo height */
+  overflow: visible;
 }
 
 .logos-track img {

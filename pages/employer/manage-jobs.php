@@ -201,7 +201,7 @@ if (isset($_GET['toggle_status'])) {
                                     <?php endif; ?>
                                     
                                     <div class="job-actions">
-                                        <a href="edit-job.php?id=<?php echo $job['job_id']; ?>" class="btn btn-warning btn-sm">
+                                        <a href="post-a-job.php?id=<?php echo $job['job_id']; ?>" class="btn btn-warning btn-sm">
                                             <i class="fas fa-edit"></i> Edit
                                         </a>
                                         <a href="?toggle_status=<?php echo $job['job_id']; ?>" class="btn btn-secondary btn-sm">

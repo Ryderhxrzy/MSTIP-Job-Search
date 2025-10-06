@@ -63,7 +63,7 @@
                             <p>Use our powerful filtering system to sort candidates by skills, experience, location, and qualifications. View detailed profiles and resumes all in one place to identify the best candidates quickly.</p>
                         </div>
                         <div class="step-image">
-                            <img src="../../assets/images/background1.jpeg" alt="Sort applicants">
+                            <img src="../../assets/images/review_sort.png" alt="Sort applicants">
                         </div>
                     </div>
             </div>

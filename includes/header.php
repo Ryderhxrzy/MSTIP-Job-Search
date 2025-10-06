@@ -102,6 +102,10 @@
                                         <i class="fas fa-bookmark"></i>
                                         Save Jobs
                                     </a>
+                                    <a href="change-password.php" class="dropdown-item">
+                                        <i class="fas fa-key"></i>
+                                        Change Password
+                                    </a>
                                     <div class="dropdown-divider"></div>
                                     <a href="graduate_logout.php" class="dropdown-item logout-item">
                                         <i class="fas fa-sign-out-alt"></i>
@@ -169,6 +173,10 @@
                         <a href="save-jobs.php" class="mobile-nav-link">
                             <i class="fas fa-bookmark"></i>
                             Save Jobs
+                        </a>
+                        <a href="change-password.php" class="mobile-nav-link">
+                            <i class="fas fa-key"></i>
+                            Change Password
                         </a>
                         <a href="graduate_logout.php" class="mobile-nav-link logout-mobile">
                             <i class="fas fa-sign-out-alt"></i>

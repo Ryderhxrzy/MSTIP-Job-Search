@@ -188,6 +188,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     <?php include_once('../../includes/log-employer-header.php') ?>
 
     <main>
+        <section class="advice-hero">
+            <div class="container">
+                <h1 class="section-titles">Change Password</h1>
+                <p class="section-subtitle">Update your account password to keep it secure.</p>
+            </div>
+            <!-- Decorative pattern behind hero -->
+            <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
+                <path fill="rgba(255,123,0,0.05)" d="M0,160 C480,280 960,40 1440,160 L1440,400 L0,400 Z"></path>
+            </svg>
+        </section>
         <div class="profile-container">
             <!-- Change Password Form -->
             <form method="POST" id="changePasswordForm">

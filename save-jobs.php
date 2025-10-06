@@ -4,7 +4,7 @@ session_start();
 
 // Check if user is logged in as Graduate
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || $_SESSION['user_type'] !== 'Graduate') {
-    header("Location: graduate-login.php");
+    header("Location: login.php");
     exit();
 }
 
@@ -45,12 +45,13 @@ if (isset($_GET['unsave']) && !empty($_GET['unsave'])) {
     exit();
 }
 
-// Fetch saved jobs with job and company details
+// Fetch saved jobs with job and company details, excluding already applied jobs
 $query = "SELECT sj.*, jl.*, c.company_name, c.location as company_location, c.profile_picture as company_logo
           FROM saved_jobs sj
           JOIN job_listings jl ON sj.job_id = jl.job_id
           JOIN companies c ON jl.company_id = c.company_id
-          WHERE sj.user_id = ?
+          LEFT JOIN applications a ON sj.job_id = a.job_id AND a.user_id = sj.user_id
+          WHERE sj.user_id = ? AND a.application_id IS NULL
           ORDER BY sj.saved_date DESC";
 
 $stmt = $conn->prepare($query);
@@ -150,6 +151,21 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
     color: var(--accent-color);
 }
 
+/* Loading spinner */
+.spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .btn-unsave,
@@ -179,7 +195,6 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
                 <h1 class="section-titles">Saved Jobs</h1>
                 <p class="section-subtitles">View and manage the jobs you have saved.</p>
             </div>
-            <!-- Decorative pattern behind hero -->
             <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
                 <path fill="rgba(255,123,0,0.05)" d="M0,160 C480,280 960,40 1440,160 L1440,400 L0,400 Z"></path>
             </svg>
@@ -318,7 +333,7 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
                         <div class="no-jobs-message" style="text-align: center; padding: 3rem 1rem;">
                             <i class="fas fa-bookmark" style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;"></i>
                             <h3 style="color: #666; margin-bottom: 0.5rem;">No Saved Jobs</h3>
-                            <p style="color: #999; margin-bottom: 1.5rem;">You haven't saved any jobs yet. Browse available positions and save the ones you're interested in.</p>
+                            <p style="color: #999; margin-bottom: 1.5rem;">You haven't saved any jobs yet, or all saved jobs have been applied to. Browse available positions and save the ones you're interested in.</p>
                         </div>
                     <?php endif; ?>
                 </div>
@@ -345,7 +360,7 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
         <div class="modal-actions">
             <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
             <button id="confirmApplyBtn" class="btn btn-primary">
-                <i class="fas fa-paper-plane"></i> &nbsp;Submit Application
+                <i class="fas fa-paper-plane"></i> Submit Application
             </button>
         </div>
     </div>
@@ -356,6 +371,8 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
     <script src="assets/js/profile.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        let isSubmitting = false;
+
         function confirmUnsave(savedId) {
             Swal.fire({
                 title: 'Remove Saved Job?',
@@ -450,11 +467,10 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
             `;
             document.getElementById('graduateInfo').innerHTML = infoHtml;
             
-            // Show modal - make sure it's visible first, then add active class
+            // Show modal
             const modal = document.getElementById('applicationModal');
             modal.style.display = 'flex';
             
-            // Use setTimeout to ensure the display change has taken effect before adding active class
             setTimeout(() => {
                 modal.classList.add('active');
             }, 10);
@@ -471,17 +487,38 @@ $savedJobs = $result->fetch_all(MYSQLI_ASSOC);
 
 function closeModal() {
     const modal = document.getElementById('applicationModal');
-    
-    // Remove active class first for animation
     modal.classList.remove('active');
     
-    // Wait for animation to complete before hiding
     setTimeout(() => {
         modal.style.display = 'none';
     }, 300);
 }
 
 function confirmApplication(jobId) {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+        return;
+    }
+    
+    isSubmitting = true;
+    const btn = document.getElementById('confirmApplyBtn');
+    const originalContent = btn.innerHTML;
+    
+    // Show loading state
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Submitting...';
+    
+    // Show loading alert
+    Swal.fire({
+        title: 'Submitting Application',
+        html: 'Please wait while we process your application and send confirmation email...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
     fetch('action/apply-job-handler.php', {
         method: 'POST',
         headers: { 
@@ -496,13 +533,20 @@ function confirmApplication(jobId) {
         return res.json();
     })
     .then(data => {
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
         closeModal();
+        
         if (data.success) {
             Swal.fire({
                 icon: 'success',
                 title: 'Application Submitted!',
                 text: data.message,
                 confirmButtonText: 'OK'
+            }).then(() => {
+                // Reload page to update saved jobs list
+                window.location.reload();
             });
         } else {
             Swal.fire({
@@ -515,7 +559,11 @@ function confirmApplication(jobId) {
     })
     .catch(error => {
         console.error('Error:', error);
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
         closeModal();
+        
         Swal.fire({
             icon: 'error',
             title: 'Application Error',
@@ -527,7 +575,7 @@ function confirmApplication(jobId) {
 
 // Close modal when clicking outside content
 document.getElementById('applicationModal').addEventListener('click', function(e) {
-    if (e.target === this) {
+    if (e.target === this && !isSubmitting) {
         closeModal();
     }
 });
@@ -535,7 +583,7 @@ document.getElementById('applicationModal').addEventListener('click', function(e
 // Add event listener for Escape key to close modal
 document.addEventListener('keydown', function(e) {
     const modal = document.getElementById('applicationModal');
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
+    if (e.key === 'Escape' && modal.classList.contains('active') && !isSubmitting) {
         closeModal();
     }
 });

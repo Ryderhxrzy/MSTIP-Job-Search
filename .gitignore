@@ -1,0 +1,18 @@
+# Ignore PHPMailer vendor directory (if installed via Composer)
+vendor/
+
+# Ignore environment files where you keep SMTP credentials
+.env
+.env.local
+.env.*.local
+
+# Ignore any config files with passwords
+config/mail_config.php
+config/*.secret.php
+
+# Ignore log files
+*.log
+
+# Ignore system files
+.DS_Store
+Thumbs.db

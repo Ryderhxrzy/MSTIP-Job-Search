@@ -20,7 +20,22 @@ session_start();
     <link rel="stylesheet" href="assets/css/sweetalert.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        .spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255,255,255,.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+    </style>
 </head>
 <body>
     <?php include_once('includes/header.php'); ?>
@@ -456,7 +471,7 @@ session_start();
             jobsContainer.innerHTML = '';
             jobCards.forEach(card => jobsContainer.appendChild(card));
         }
-
+let isSubmitting = false;
         function applyJob(jobId) {
     <?php if (!isset($_SESSION['logged_in']) || $_SESSION['user_type'] !== 'Graduate'): ?>
         Swal.fire({
@@ -515,11 +530,10 @@ session_start();
             `;
             document.getElementById('graduateInfo').innerHTML = infoHtml;
             
-            // Show modal - make sure it's visible first, then add active class
+            // Show modal
             const modal = document.getElementById('applicationModal');
             modal.style.display = 'flex';
             
-            // Use setTimeout to ensure the display change has taken effect before adding active class
             setTimeout(() => {
                 modal.classList.add('active');
             }, 10);
@@ -536,17 +550,38 @@ session_start();
 
 function closeModal() {
     const modal = document.getElementById('applicationModal');
-    
-    // Remove active class first for animation
     modal.classList.remove('active');
     
-    // Wait for animation to complete before hiding
     setTimeout(() => {
         modal.style.display = 'none';
     }, 300);
 }
 
 function confirmApplication(jobId) {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+        return;
+    }
+    
+    isSubmitting = true;
+    const btn = document.getElementById('confirmApplyBtn');
+    const originalContent = btn.innerHTML;
+    
+    // Show loading state
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Submitting...';
+    
+    // Show loading alert
+    Swal.fire({
+        title: 'Submitting Application',
+        html: 'Please wait while we process your application and send confirmation email...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+    
     fetch('action/apply-job-handler.php', {
         method: 'POST',
         headers: { 
@@ -561,13 +596,20 @@ function confirmApplication(jobId) {
         return res.json();
     })
     .then(data => {
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
         closeModal();
+        
         if (data.success) {
             Swal.fire({
                 icon: 'success',
                 title: 'Application Submitted!',
                 text: data.message,
                 confirmButtonText: 'OK'
+            }).then(() => {
+                // Reload page to update saved jobs list
+                window.location.reload();
             });
         } else {
             Swal.fire({
@@ -580,7 +622,11 @@ function confirmApplication(jobId) {
     })
     .catch(error => {
         console.error('Error:', error);
+        isSubmitting = false;
+        btn.disabled = false;
+        btn.innerHTML = originalContent;
         closeModal();
+        
         Swal.fire({
             icon: 'error',
             title: 'Application Error',
@@ -592,7 +638,7 @@ function confirmApplication(jobId) {
 
 // Close modal when clicking outside content
 document.getElementById('applicationModal').addEventListener('click', function(e) {
-    if (e.target === this) {
+    if (e.target === this && !isSubmitting) {
         closeModal();
     }
 });
@@ -600,7 +646,7 @@ document.getElementById('applicationModal').addEventListener('click', function(e
 // Add event listener for Escape key to close modal
 document.addEventListener('keydown', function(e) {
     const modal = document.getElementById('applicationModal');
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
+    if (e.key === 'Escape' && modal.classList.contains('active') && !isSubmitting) {
         closeModal();
     }
 });

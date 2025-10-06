@@ -6,6 +6,7 @@
         header("Location: ../../employer-login.php");
         exit();
     }
+    $isLoggedIn = isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true && $_SESSION['user_type'] === 'Employer';
 
     $userEmail = $_SESSION['email'];
     $userCode = $_SESSION['user_code'];

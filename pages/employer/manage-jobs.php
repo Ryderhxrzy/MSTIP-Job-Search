@@ -208,7 +208,7 @@ if (isset($_GET['toggle_status'])) {
                                             <i class="fas fa-toggle-<?php echo $job['status'] == 'Open' ? 'on' : 'off'; ?>"></i>
                                             <?php echo $job['status'] == 'Open' ? 'Close' : 'Open'; ?>
                                         </a>
-                                        <a href="view-applications.php?job_id=<?php echo $job['job_id']; ?>" class="btn btn-success btn-sm">
+                                        <a href="applicants.php?job_id=<?php echo $job['job_id']; ?>" class="btn btn-success btn-sm">
                                             <i class="fas fa-eye"></i> View Applications
                                         </a>
                                         <button onclick="confirmDelete(<?php echo $job['job_id']; ?>)" class="btn btn-danger btn-sm">

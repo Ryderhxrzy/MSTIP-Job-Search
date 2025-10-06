@@ -4,7 +4,7 @@ session_start();
 
 // Check if user is logged in as Graduate
 if (!isset($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true || $_SESSION['user_type'] !== 'Graduate') {
-    header("Location: graduate-login.php");
+    header("Location: login.php");
     exit();
 }
 

@@ -26,6 +26,30 @@ if ($result->num_rows > 0) {
     exit();
 }
 
+// Check if editing existing job
+$is_edit = false;
+$job_data = [];
+if (isset($_GET['id'])) {
+    $job_id = intval($_GET['id']);
+    
+    // Verify that the job belongs to the employer's company
+    $verify_stmt = $conn->prepare("SELECT j.* FROM job_listings j 
+                                  JOIN companies c ON j.company_id = c.company_id 
+                                  WHERE j.job_id = ? AND c.user_id = ?");
+    $verify_stmt->bind_param("is", $job_id, $userCode);
+    $verify_stmt->execute();
+    $verify_result = $verify_stmt->get_result();
+    
+    if ($verify_result->num_rows > 0) {
+        $is_edit = true;
+        $job_data = $verify_result->fetch_assoc();
+    } else {
+        $_SESSION['job_error'] = "Job not found or you don't have permission to edit it.";
+        header("Location: manage-jobs.php");
+        exit();
+    }
+}
+
 // Check for session messages
 $show_success = false;
 $show_error = false;
@@ -55,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $application_deadline = $_POST['application_deadline'];
     $contact_email = trim($_POST['contact_email']);
     
-    $image_url = null;
+    $image_url = isset($_POST['existing_image']) ? $_POST['existing_image'] : null;
 
     // Upload job image
     if (isset($_FILES['image_url']) && $_FILES['image_url']['error'] === 0) {
@@ -65,6 +89,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $new_filename = "job_image_" . time() . "_" . $userCode . "." . $extension;
             $upload_path = "../../assets/images/" . $new_filename;
             if (move_uploaded_file($_FILES['image_url']['tmp_name'], $upload_path)) {
+                // Delete old image if exists and updating
+                if ($is_edit && !empty($job_data['image_url'])) {
+                    $old_image_path = "../../assets/images/" . $job_data['image_url'];
+                    if (file_exists($old_image_path)) {
+                        unlink($old_image_path);
+                    }
+                }
                 $image_url = $new_filename;
             }
         }
@@ -73,29 +104,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Validate required fields
     if (empty($job_title) || empty($slots_available) || empty($job_description) || empty($qualifications) || empty($application_deadline)) {
         $_SESSION['job_error'] = "Please fill in all required fields.";
-        header("Location: " . $_SERVER['PHP_SELF']);
+        header("Location: " . $_SERVER['PHP_SELF'] . ($is_edit ? "?id=" . $_POST['job_id'] : ""));
         exit();
     }
 
     // Validate application deadline
     if (strtotime($application_deadline) < strtotime(date('Y-m-d'))) {
         $_SESSION['job_error'] = "Application deadline cannot be in the past.";
-        header("Location: " . $_SERVER['PHP_SELF']);
+        header("Location: " . $_SERVER['PHP_SELF'] . ($is_edit ? "?id=" . $_POST['job_id'] : ""));
         exit();
     }
 
-    // Insert job listing
-    $stmt = $conn->prepare("INSERT INTO job_listings (company_id, job_title, job_position, job_category, slots_available, salary_range, job_description, qualifications, job_type_shift, application_deadline, contact_email, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("isssisssssss", $company_id, $job_title, $job_position, $job_category, $slots_available, $salary_range, $job_description, $qualifications, $job_type_shift, $application_deadline, $contact_email, $image_url);
-
-    if ($stmt->execute()) {
-        $_SESSION['job_success'] = true;
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+    if ($is_edit && isset($_POST['job_id'])) {
+        // Update existing job
+        $job_id = intval($_POST['job_id']);
+        $stmt = $conn->prepare("UPDATE job_listings SET job_title = ?, job_position = ?, job_category = ?, slots_available = ?, salary_range = ?, job_description = ?, qualifications = ?, job_type_shift = ?, application_deadline = ?, contact_email = ?, image_url = ? WHERE job_id = ? AND company_id = ?");
+        $stmt->bind_param("sssssssssssii", $job_title, $job_position, $job_category, $slots_available, $salary_range, $job_description, $qualifications, $job_type_shift, $application_deadline, $contact_email, $image_url, $job_id, $company_id);
+        
+        if ($stmt->execute()) {
+            $_SESSION['job_success'] = "Job has been updated successfully.";
+            header("Location: manage-jobs.php");
+            exit();
+        } else {
+            $_SESSION['job_error'] = "Error updating job. Please try again.";
+            header("Location: " . $_SERVER['PHP_SELF'] . "?id=" . $job_id);
+            exit();
+        }
     } else {
-        $_SESSION['job_error'] = "Error posting job. Please try again.";
-        header("Location: " . $_SERVER['PHP_SELF']);
-        exit();
+        // Insert new job listing
+        $stmt = $conn->prepare("INSERT INTO job_listings (company_id, job_title, job_position, job_category, slots_available, salary_range, job_description, qualifications, job_type_shift, application_deadline, contact_email, image_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("isssisssssss", $company_id, $job_title, $job_position, $job_category, $slots_available, $salary_range, $job_description, $qualifications, $job_type_shift, $application_deadline, $contact_email, $image_url);
+
+        if ($stmt->execute()) {
+            $_SESSION['job_success'] = "Job has been posted successfully.";
+            header("Location: manage-jobs.php");
+            exit();
+        } else {
+            $_SESSION['job_error'] = "Error posting job. Please try again.";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        }
     }
 }
 ?>
@@ -105,7 +153,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Post a Job - MSTIP Seek Employee</title>
+    <title><?php echo $is_edit ? 'Edit Job' : 'Post a Job'; ?> - MSTIP Seek Employee</title>
     <link rel="stylesheet" href="../../assets/css/global.css">
     <link rel="stylesheet" href="../../assets/css/styles.css">
     <link rel="stylesheet" href="../../assets/css/homepage.css">
@@ -116,9 +164,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <style>
-
-    </style>
 </head>
 <body>
     <?php include_once('../../includes/log-employer-header.php') ?>
@@ -126,8 +171,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main>
         <section class="advice-hero">
             <div class="container">
-                <h1 class="section-titles">Post a Job</h1>
-                <p class="section-subtitle">Easily post new job opportunities and connect with the right talent for your company.</p>
+                <h1 class="section-titles"><?php echo $is_edit ? 'Edit Job' : 'Post a Job'; ?></h1>
+                <p class="section-subtitle"><?php echo $is_edit ? 'Update your job posting information' : 'Easily post new job opportunities and connect with the right talent for your company.'; ?></p>
             </div>
             <!-- Decorative pattern behind hero -->
             <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
@@ -136,6 +181,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </section>
         <div class="job-container">
             <form method="POST" enctype="multipart/form-data" id="postJobForm">
+                <?php if ($is_edit): ?>
+                    <input type="hidden" name="job_id" value="<?php echo $job_data['job_id']; ?>">
+                    <input type="hidden" name="existing_image" value="<?php echo htmlspecialchars($job_data['image_url']); ?>">
+                <?php endif; ?>
+                
                 <!-- Job Basic Information Card -->
                 <div class="card">
                     <div class="card-header">
@@ -144,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card-body">
                         <div class="form-group">
                             <label for="job_title" class="required">Job Title</label>
-                            <input type="text" id="job_title" name="job_title" value="<?php echo isset($_POST['job_title']) ? htmlspecialchars($_POST['job_title']) : ''; ?>" placeholder="e.g., Software Engineer, Marketing Manager" required>
+                            <input type="text" id="job_title" name="job_title" value="<?php echo $is_edit ? htmlspecialchars($job_data['job_title']) : (isset($_POST['job_title']) ? htmlspecialchars($_POST['job_title']) : ''); ?>" placeholder="e.g., Software Engineer, Marketing Manager" required>
                         </div>
 
                         <div class="form-row">
@@ -152,19 +202,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="job_position" class="required">Job Position Level</label>
                                 <select id="job_position" name="job_position" required>
                                     <option value="">Select Position Level</option>
-                                    <option value="Entry Level" <?php echo (isset($_POST['job_position']) && $_POST['job_position'] == 'Entry Level') ? 'selected' : ''; ?>>Entry Level</option>
-                                    <option value="Junior" <?php echo (isset($_POST['job_position']) && $_POST['job_position'] == 'Junior') ? 'selected' : ''; ?>>Junior</option>
-                                    <option value="Mid-Level" <?php echo (isset($_POST['job_position']) && $_POST['job_position'] == 'Mid-Level') ? 'selected' : ''; ?>>Mid-Level</option>
-                                    <option value="Senior" <?php echo (isset($_POST['job_position']) && $_POST['job_position'] == 'Senior') ? 'selected' : ''; ?>>Senior</option>
-                                    <option value="Managerial" <?php echo (isset($_POST['job_position']) && $_POST['job_position'] == 'Managerial') ? 'selected' : ''; ?>>Managerial</option>
+                                    <?php 
+                                    $positions = ['Entry Level', 'Junior', 'Mid-Level', 'Senior', 'Managerial'];
+                                    $selected_position = $is_edit ? $job_data['job_position'] : (isset($_POST['job_position']) ? $_POST['job_position'] : '');
+                                    foreach ($positions as $position): 
+                                    ?>
+                                        <option value="<?php echo $position; ?>" <?php echo $selected_position == $position ? 'selected' : ''; ?>><?php echo $position; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="job_category" class="required">Job Category</label>
                                 <select id="job_category" name="job_category" required>
                                     <option value="">Select Category</option>
-                                    <option value="normal" <?php echo (isset($_POST['job_category']) && $_POST['job_category'] == 'normal') ? 'selected' : ''; ?>>Normal</option>
-                                    <option value="deaf" <?php echo (isset($_POST['job_category']) && $_POST['job_category'] == 'deaf') ? 'selected' : ''; ?>>Deaf</option>
+                                    <?php 
+                                    $categories = ['normal' => 'Normal', 'deaf' => 'Deaf'];
+                                    $selected_category = $is_edit ? $job_data['job_category'] : (isset($_POST['job_category']) ? $_POST['job_category'] : '');
+                                    foreach ($categories as $value => $label): 
+                                    ?>
+                                        <option value="<?php echo $value; ?>" <?php echo $selected_category == $value ? 'selected' : ''; ?>><?php echo $label; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
@@ -172,21 +229,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="slots_available" class="required">Slots Available</label>
-                                <input type="number" id="slots_available" name="slots_available" min="1" value="<?php echo isset($_POST['slots_available']) ? htmlspecialchars($_POST['slots_available']) : '1'; ?>" required>
+                                <input type="number" id="slots_available" name="slots_available" min="1" value="<?php echo $is_edit ? htmlspecialchars($job_data['slots_available']) : (isset($_POST['slots_available']) ? htmlspecialchars($_POST['slots_available']) : '1'); ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="job_type_shift" class="required">Job Type</label>
                                 <select id="job_type_shift" name="job_type_shift" required>
                                     <option value="">Select Job Type</option>
-                                    <option value="Full-Time" <?php echo (isset($_POST['job_type_shift']) && $_POST['job_type_shift'] == 'Full-Time') ? 'selected' : ''; ?>>Full-Time</option>
-                                    <option value="Part-Time" <?php echo (isset($_POST['job_type_shift']) && $_POST['job_type_shift'] == 'Part-Time') ? 'selected' : ''; ?>>Part-Time</option>
+                                    <?php 
+                                    $job_types = ['Full-Time', 'Part-Time'];
+                                    $selected_type = $is_edit ? $job_data['job_type_shift'] : (isset($_POST['job_type_shift']) ? $_POST['job_type_shift'] : '');
+                                    foreach ($job_types as $type): 
+                                    ?>
+                                        <option value="<?php echo $type; ?>" <?php echo $selected_type == $type ? 'selected' : ''; ?>><?php echo $type; ?></option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="salary_range">Salary Range</label>
-                            <input type="text" id="salary_range" name="salary_range" value="<?php echo isset($_POST['salary_range']) ? htmlspecialchars($_POST['salary_range']) : ''; ?>" placeholder="e.g., ₱20,000 - ₱30,000 per month">
+                            <input type="text" id="salary_range" name="salary_range" value="<?php echo $is_edit ? htmlspecialchars($job_data['salary_range']) : (isset($_POST['salary_range']) ? htmlspecialchars($_POST['salary_range']) : ''); ?>" placeholder="e.g., ₱20,000 - ₱30,000 per month">
                         </div>
                     </div>
                 </div>
@@ -199,12 +261,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="card-body">
                         <div class="form-group">
                             <label for="job_description" class="required">Job Description</label>
-                            <textarea id="job_description" name="job_description" placeholder="Describe the job responsibilities, duties, and expectations..." required><?php echo isset($_POST['job_description']) ? htmlspecialchars($_POST['job_description']) : ''; ?></textarea>
+                            <textarea id="job_description" name="job_description" placeholder="Describe the job responsibilities, duties, and expectations..." required><?php echo $is_edit ? htmlspecialchars($job_data['job_description']) : (isset($_POST['job_description']) ? htmlspecialchars($_POST['job_description']) : ''); ?></textarea>
                         </div>
 
                         <div class="form-group">
                             <label for="qualifications" class="required">Qualifications</label>
-                            <textarea id="qualifications" name="qualifications" placeholder="List the required skills, education, experience, and other qualifications..." required><?php echo isset($_POST['qualifications']) ? htmlspecialchars($_POST['qualifications']) : ''; ?></textarea>
+                            <textarea id="qualifications" name="qualifications" placeholder="List the required skills, education, experience, and other qualifications..." required><?php echo $is_edit ? htmlspecialchars($job_data['qualifications']) : (isset($_POST['qualifications']) ? htmlspecialchars($_POST['qualifications']) : ''); ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -218,11 +280,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="application_deadline" class="required">Application Deadline</label>
-                                <input type="date" id="application_deadline" name="application_deadline" value="<?php echo isset($_POST['application_deadline']) ? htmlspecialchars($_POST['application_deadline']) : ''; ?>" min="<?php echo date('Y-m-d'); ?>" required>
+                                <input type="date" id="application_deadline" name="application_deadline" value="<?php echo $is_edit ? htmlspecialchars($job_data['application_deadline']) : (isset($_POST['application_deadline']) ? htmlspecialchars($_POST['application_deadline']) : ''); ?>" min="<?php echo date('Y-m-d'); ?>" required>
                             </div>
                             <div class="form-group">
                                 <label for="contact_email" class="required">Contact Email</label>
-                                <input type="email" id="contact_email" name="contact_email" value="<?php echo isset($_POST['contact_email']) ? htmlspecialchars($_POST['contact_email']) : ''; ?>" placeholder="email@company.com" required>
+                                <input type="email" id="contact_email" name="contact_email" value="<?php echo $is_edit ? htmlspecialchars($job_data['contact_email']) : (isset($_POST['contact_email']) ? htmlspecialchars($_POST['contact_email']) : ''); ?>" placeholder="email@company.com" required>
                             </div>
                         </div>
 
@@ -230,22 +292,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="image_url">Job Image</label>
                             <div class="image-upload" onclick="document.getElementById('imageInput').click()">
                                 <input type="file" name="image_url" accept="image/*" onchange="previewJobImage(this)" id="imageInput">
-                                <div class="upload-placeholder">
+                                <div class="upload-placeholder" <?php echo ($is_edit && !empty($job_data['image_url'])) ? 'style="display:none;"' : ''; ?>>
                                     <i class="fas fa-cloud-upload-alt"></i>
                                     <span>Click to upload job image (Optional)</span>
                                 </div>
-                                <div class="image-preview" id="imagePreview"></div>
+                                <div class="image-preview" id="imagePreview" <?php echo ($is_edit && !empty($job_data['image_url'])) ? 'style="display:block;"' : ''; ?>>
+                                    <?php if ($is_edit && !empty($job_data['image_url'])): ?>
+                                        <img src="../../assets/images/<?php echo htmlspecialchars($job_data['image_url']); ?>" alt="Current Job Image">
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="btn-group">
-                    <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='manage-jobs.php'">
                         <i class="fas fa-arrow-left"></i> Cancel
                     </button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Post Job
+                        <i class="fas fa-<?php echo $is_edit ? 'save' : 'paper-plane'; ?>"></i> <?php echo $is_edit ? 'Update Job' : 'Post Job'; ?>
                     </button>
                 </div>
             </form>
@@ -281,11 +347,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             Swal.fire({
                 icon: 'success',
                 title: 'Success!',
-                text: 'Job has been posted successfully.',
+                text: 'Job has been <?php echo $is_edit ? "updated" : "posted"; ?> successfully.',
                 confirmButtonText: 'OK'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Optionally redirect to jobs list or clear form
                     window.location.href = 'manage-jobs.php';
                 }
             });

@@ -1,5 +1,58 @@
 <?php 
     session_start();
+    include_once('includes/db_connect.php');
+
+    // Check for session messages
+    $show_success = false;
+    $show_error = false;
+    $error_msg = '';
+
+    if (isset($_SESSION['contact_success'])) {
+        $show_success = true;
+        unset($_SESSION['contact_success']);
+    }
+
+    if (isset($_SESSION['contact_error'])) {
+        $show_error = true;
+        $error_msg = $_SESSION['contact_error'];
+        unset($_SESSION['contact_error']);
+    }
+
+    // Handle contact form submission
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $name = trim($_POST['name']);
+        $email = trim($_POST['email']);
+        $subject = trim($_POST['subject']);
+        $message = trim($_POST['message']);
+
+        // Validate inputs
+        if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+            $_SESSION['contact_error'] = "All fields are required.";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        // Validate email format
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $_SESSION['contact_error'] = "Please enter a valid email address.";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        }
+
+        // Insert into database
+        $stmt = $conn->prepare("INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)");
+        $stmt->bind_param("ssss", $name, $email, $subject, $message);
+
+        if ($stmt->execute()) {
+            $_SESSION['contact_success'] = true;
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        } else {
+            $_SESSION['contact_error'] = "Error sending message. Please try again.";
+            header("Location: " . $_SERVER['PHP_SELF']);
+            exit();
+        }
+    }
 ?>
 
 <!DOCTYPE html>
@@ -13,29 +66,32 @@
     <link rel="stylesheet" href="assets/css/homepage.css">
     <link rel="stylesheet" href="assets/css/footer.css">
     <link rel="stylesheet" href="assets/css/employer.css">
+    <link rel="stylesheet" href="assets/css/sweetalert.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" href="assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
     <?php include_once('includes/header.php') ?>
 
-    <mai>
+    <main>
         <section class="advice-hero">
-                    <div class="container">
+            <div class="container">
                 <h1 class="section-titles">Contact Us</h1>
-                <p class="section-subtitle">Have questions? We’re here to help. Reach out to us and we’ll get back to you promptly.</p>
-                    </div>
-                    
-                    <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
-                        <path fill="rgba(255,123,0,0.05)" d="M0,160 C480,280 960,40 1440,160 L1440,400 L0,400 Z"></path>
-                    </svg>
-                </section>
+                <p class="section-subtitle">Have questions? We're here to help. Reach out to us and we'll get back to you promptly.</p>
+            </div>
+            
+            <svg class="advice-pattern" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 400" preserveAspectRatio="none">
+                <path fill="rgba(255,123,0,0.05)" d="M0,160 C480,280 960,40 1440,160 L1440,400 L0,400 Z"></path>
+            </svg>
+        </section>
 
         <!-- Contact Form -->
         <section class="contact-form-section">
             <div class="container">
                 <h2 class="section-title">Get In Touch</h2>
-                <form class="contact-form" action="#" method="POST">
+                <form class="contact-form" method="POST">
                     <div class="form-group">
                         <label for="name">Full Name</label>
                         <input type="text" id="name" name="name" placeholder="Your name" required>
@@ -53,7 +109,9 @@
                         <textarea id="message" name="message" rows="6" placeholder="Write your message here..." required></textarea>
                     </div>
                     <div class="button-wrapper">
-                        <button type="submit" class="btns">Send Message</button>
+                        <button type="submit" class="btns">
+                            <i class="fas fa-paper-plane"></i> Send Message
+                        </button>
                     </div>
                 </form>
             </div>
@@ -95,5 +153,31 @@
     <?php include_once('includes/footer.php') ?>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/profile.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // SweetAlert notifications
+        <?php if ($show_success): ?>
+            Swal.fire({
+                icon: 'success',
+                title: 'Message Sent!',
+                text: 'Thank you for contacting us. We will get back to you shortly.',
+                confirmButtonText: 'OK'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Clear form fields
+                    document.querySelector('.contact-form').reset();
+                }
+            });
+        <?php endif; ?>
+
+        <?php if ($show_error): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '<?php echo $error_msg; ?>',
+                confirmButtonText: 'OK'
+            });
+        <?php endif; ?>
+    </script>
 </body>
 </html>

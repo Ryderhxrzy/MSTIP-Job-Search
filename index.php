@@ -879,69 +879,35 @@
         return;
     <?php endif; ?>
 
-    // Fetch graduate info via AJAX
-    fetch('action/fetch-graduate-info.php')
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            let infoHtml = `
-                <div class="info-item">
-                    <span class="info-label">Full Name</span>
-                    <span class="info-value">${data.first_name} ${data.middle_name ?? ''} ${data.last_name}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Phone Number</span>
-                    <span class="info-value">${data.phone_number}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Course</span>
-                    <span class="info-value">${data.course}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Year Graduated</span>
-                    <span class="info-value">${data.year_graduated}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Skills</span>
-                    <span class="info-value">${data.skills ?? 'N/A'}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">LinkedIn Profile</span>
-                    <span class="info-value">
-                        ${data.linkedin_profile ? 
-                            `<a href="${data.linkedin_profile}" target="_blank">View Profile</a>` : 
-                            'Not provided'
-                        }
-                    </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Resume</span>
-                    <span class="info-value">
-                        ${data.resume ? 
-                            `<a href="assets/resumes/${data.resume}" target="_blank">View Resume</a>` : 
-                            'Not uploaded'
-                        }
-                    </span>
-                </div>
-            `;
-            document.getElementById('graduateInfo').innerHTML = infoHtml;
-            
-            // Show modal
-            const modal = document.getElementById('applicationModal');
-            modal.style.display = 'flex';
-            
-            setTimeout(() => {
-                modal.classList.add('active');
-            }, 10);
-            
-            // Attach jobId to confirm button
-            document.getElementById('confirmApplyBtn').onclick = function() {
-                confirmApplication(jobId);
-            };
-        } else {
-            Swal.fire("Error", "Unable to fetch your information.", "error");
-        }
-    });
+    console.log('Checking application for job ID:', jobId);
+    
+    // Check if already applied
+    fetch(`action/check-application.php?job_id=${jobId}`)
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.already_applied) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Already Applied',
+                    text: 'You have already applied for this job. Check your applications status in your profile.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            } else {
+                console.log('Redirecting to application page');
+                // Redirect to the application page
+                window.location.href = `job-application.php?job_id=${jobId}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error checking application status:', error);
+            // If check fails, allow proceeding to application page
+            window.location.href = `job-application.php?job_id=${jobId}`;
+        });
 }
 
 function closeModal() {

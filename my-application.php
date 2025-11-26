@@ -623,15 +623,45 @@ if (!empty($applications)) {
                 
                 const filter = this.getAttribute('data-filter');
                 const cards = document.querySelectorAll('.job-listing-card');
+                let visibleCount = 0;
                 
                 cards.forEach(card => {
                     if (filter === 'all') {
                         card.style.display = 'block';
+                        visibleCount++;
                     } else {
                         const status = card.getAttribute('data-status');
-                        card.style.display = status === filter ? 'block' : 'none';
+                        if (status === filter) {
+                            card.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
                     }
                 });
+                
+                // Show/hide no results message
+                let noResultsMsg = document.querySelector('.no-filter-results');
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.className = 'no-filter-results';
+                    noResultsMsg.style.cssText = 'text-align: center; padding: 3rem 1rem; grid-column: 1 / -1;';
+                    document.querySelector('.job-listings-grid').appendChild(noResultsMsg);
+                }
+                
+                if (visibleCount === 0) {
+                    noResultsMsg.innerHTML = `
+                        <i class="fas fa-search" style="font-size: 4rem; color: #ddd; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #666; margin-bottom: 0.5rem;">No ${filter} Applications</h3>
+                        <p style="color: #999; margin-bottom: 1.5rem;">You don't have any applications with "${filter}" status.</p>
+                        <button class="btn-apply" onclick="document.querySelector('[data-filter=\"all\"]').click()" style="margin: 0 auto;">
+                            <i class="fas fa-list"></i>Show All Applications
+                        </button>
+                    `;
+                    noResultsMsg.style.display = 'block';
+                } else {
+                    noResultsMsg.style.display = 'none';
+                }
             });
         });
 

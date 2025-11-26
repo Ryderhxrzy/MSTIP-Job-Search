@@ -38,30 +38,32 @@ date_default_timezone_set('Asia/Manila');
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_code'])) {
-    echo json_encode(['success' => false, 'message' => 'Not logged in']);
+    // Redirect to login with error
+    $_SESSION['error'] = 'Please login to submit applications.';
+    header('Location: ../login.php');
     exit;
 }
 
 $user_id = $_SESSION['user_code'];
 $job_id = $_POST['job_id'] ?? null;
+$message_to_employer = $_POST['message_to_employer'] ?? '';
+
+// Collect answers from individual answer_ fields
+$answers = [];
+foreach ($_POST as $key => $value) {
+    if (strpos($key, 'answer_') === 0 && !empty($value)) {
+        $question_id = str_replace('answer_', '', $key);
+        $answers[$question_id] = $value;
+    }
+}
 
 if (!$job_id) {
-    echo json_encode(['success' => false, 'message' => 'Invalid job ID']);
+    $_SESSION['error'] = 'Invalid job ID';
+    header('Location: ../index.php');
     exit;
 }
 
 try {
-    // Check duplicate application
-    $check = $conn->prepare("SELECT * FROM applications WHERE user_id = ? AND job_id = ?");
-    $check->bind_param("si", $user_id, $job_id);
-    $check->execute();
-    $res = $check->get_result();
-    
-    if ($res->num_rows > 0) {
-        echo json_encode(['success' => false, 'message' => 'You have already applied for this job.']);
-        exit;
-    }
-    
     // Get user information
     $user_sql = "SELECT gi.first_name, gi.last_name, u.email_address 
                  FROM graduate_information gi
@@ -74,7 +76,8 @@ try {
     $user_data = $user_result->fetch_assoc();
     
     if (!$user_data) {
-        echo json_encode(['success' => false, 'message' => 'User information not found']);
+        $_SESSION['error'] = 'User information not found.';
+        header('Location: ../index.php');
         exit;
     }
     
@@ -90,15 +93,34 @@ try {
     $job_data = $job_result->fetch_assoc();
     
     if (!$job_data) {
-        echo json_encode(['success' => false, 'message' => 'Job information not found']);
+        $_SESSION['error'] = 'Job information not found.';
+        header('Location: ../index.php');
         exit;
     }
     
-    // Insert new application
-    $stmt = $conn->prepare("INSERT INTO applications (user_id, job_id, application_date, status) VALUES (?, ?, NOW(), 'Pending')");
-    $stmt->bind_param("si", $user_id, $job_id);
+    // Start transaction
+    $conn->begin_transaction();
     
-    if ($stmt->execute()) {
+    try {
+        // Insert new application
+        $stmt = $conn->prepare("INSERT INTO applications (user_id, job_id, message_to_employer, application_date, status) VALUES (?, ?, ?, NOW(), 'Pending')");
+        $stmt->bind_param("sis", $user_id, $job_id, $message_to_employer);
+        $stmt->execute();
+        $application_id = $conn->insert_id;
+        
+        // Check if there are answers to save
+        if (!empty($answers) && is_array($answers)) {
+            $answer_query = "INSERT INTO application_answers (application_id, question_id, answer_text) VALUES (?, ?, ?)";
+            $answer_stmt = $conn->prepare($answer_query);
+            
+            foreach ($answers as $question_id => $answer_text) {
+                $answer_stmt->bind_param("iis", $application_id, $question_id, $answer_text);
+                $answer_stmt->execute();
+            }
+        }
+        
+        $conn->commit();
+        
         // Send email confirmation
         $mail = new PHPMailer(true);
         
@@ -139,7 +161,7 @@ try {
                     <div class='content'>
                         <h2>Dear " . htmlspecialchars($user_data['first_name']) . " " . htmlspecialchars($user_data['last_name']) . ",</h2>
                         
-                        <p>Thank you for your interest in joining our team! We're excited to let you know that your application has been successfully submitted.</p>
+                        <p>Thank you for your interest in joining our team! We're excited to let you know that your application has been successfully submitted with your detailed responses.</p>
                         
                         <div class='highlight'>
                             <h3>Application Details:</h3>
@@ -151,15 +173,15 @@ try {
                         
                         <h3>What Happens Next?</h3>
                         <ul>
-                            <li><strong>Review Process:</strong> Our hiring team will carefully review your application and qualifications</li>
+                            <li><strong>Review Process:</strong> Our hiring team will carefully review your application and detailed responses</li>
                             <li><strong>Initial Screening:</strong> If your profile matches our requirements, we'll contact you within 3-5 business days</li>
                             <li><strong>Interview Process:</strong> Qualified candidates will be invited for an interview</li>
                             <li><strong>Final Decision:</strong> We'll notify you of our decision regardless of the outcome</li>
                         </ul>
                         
                         <div class='highlight'>
-                            <h3>Stay Connected:</h3>
-                            <p>We'll keep you updated on your application status via this email address. Please ensure you check your inbox regularly, including your spam folder.</p>
+                            <h3>Your Application Responses:</h3>
+                            <p>We have received your detailed answers to the application questions. These responses help us better understand your qualifications and fit for the position.</p>
                         </div>
                         
                         <p><strong>Questions?</strong> If you have any questions about your application or the position, feel free to reply to this email.</p>
@@ -183,31 +205,32 @@ try {
             $mail->Body = $message;
             
             if ($mail->send()) {
-                echo json_encode([
-                    'success' => true, 
-                    'message' => 'Application submitted successfully! A confirmation email has been sent to your email address.'
-                ]);
+                $_SESSION['application_success'] = 'Application submitted successfully! Your responses have been recorded and a confirmation email has been sent to your email address.';
+                header('Location: ../my-application.php');
+                exit();
             } else {
-                echo json_encode([
-                    'success' => true, 
-                    'message' => 'Application submitted successfully! However, we could not send a confirmation email. Please check your application status in your profile.'
-                ]);
+                $_SESSION['application_success'] = 'Application submitted successfully! However, we could not send a confirmation email. Please check your application status in your profile.';
+                header('Location: ../my-application.php');
+                exit();
             }
         } catch (Exception $e) {
             error_log("Email sending failed: " . $mail->ErrorInfo);
-            echo json_encode([
-                'success' => true, 
-                'message' => 'Application submitted successfully! However, we could not send a confirmation email. Please check your application status in your profile.'
-            ]);
+            $_SESSION['application_success'] = 'Application submitted successfully! However, we could not send a confirmation email. Please check your application status in your profile.';
+            header('Location: ../my-application.php');
+            exit();
         }
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to submit application.']);
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['application_error'] = 'An error occurred: ' . $e->getMessage();
+        header('Location: ../index.php');
+        exit();
     }
     
 } catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => 'An error occurred: ' . $e->getMessage()]);
+    $_SESSION['application_error'] = 'An error occurred: ' . $e->getMessage();
+    header('Location: ../index.php');
+    exit();
 } finally {
-    if (isset($check)) $check->close();
     if (isset($user_stmt)) $user_stmt->close();
     if (isset($job_stmt)) $job_stmt->close();
     if (isset($stmt)) $stmt->close();

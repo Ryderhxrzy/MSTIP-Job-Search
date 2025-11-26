@@ -379,31 +379,6 @@ session_start();
         </div>
     </main>
 
-    <div id="applicationModal" class="modal">
-    <div class="modal-content">
-        <span class="close-btn" onclick="closeModal()">&times;</span>
-        
-        <div class="modal-header">
-            <h2><i class="fas fa-file-alt"></i> Confirm Job Application</h2>
-            <p>Please review your information before submitting your application</p>
-        </div>
-        
-        <div class="graduate-info-card">
-            <h3><i class="fas fa-user-graduate"></i> Applicant Information</h3>
-            <div class="info-grid" id="graduateInfo">
-                <!-- Graduate information will be populated here -->
-            </div>
-        </div>
-        
-        <div class="modal-actions">
-            <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-            <button id="confirmApplyBtn" class="btn btn-primary">
-                <i class="fas fa-paper-plane"></i> &nbsp;Submit Application
-            </button>
-        </div>
-    </div>
-</div>
-
     <?php include_once('includes/footer.php'); ?>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/profile.js"></script>
@@ -483,173 +458,36 @@ let isSubmitting = false;
         return;
     <?php endif; ?>
 
-    // Fetch graduate info via AJAX
-    fetch('action/fetch-graduate-info.php')
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            let infoHtml = `
-                <div class="info-item">
-                    <span class="info-label">Full Name</span>
-                    <span class="info-value">${data.first_name} ${data.middle_name ?? ''} ${data.last_name}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Phone Number</span>
-                    <span class="info-value">${data.phone_number}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Course</span>
-                    <span class="info-value">${data.course}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Year Graduated</span>
-                    <span class="info-value">${data.year_graduated}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Skills</span>
-                    <span class="info-value">${data.skills ?? 'N/A'}</span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">LinkedIn Profile</span>
-                    <span class="info-value">
-                        ${data.linkedin_profile ? 
-                            `<a href="${data.linkedin_profile}" target="_blank">View Profile</a>` : 
-                            'Not provided'
-                        }
-                    </span>
-                </div>
-                <div class="info-item">
-                    <span class="info-label">Resume</span>
-                    <span class="info-value">
-                        ${data.resume ? 
-                            `<a href="assets/resumes/${data.resume}" target="_blank">View Resume</a>` : 
-                            'Not uploaded'
-                        }
-                    </span>
-                </div>
-            `;
-            document.getElementById('graduateInfo').innerHTML = infoHtml;
-            
-            // Show modal
-            const modal = document.getElementById('applicationModal');
-            modal.style.display = 'flex';
-            
-            setTimeout(() => {
-                modal.classList.add('active');
-            }, 10);
-            
-            // Attach jobId to confirm button
-            document.getElementById('confirmApplyBtn').onclick = function() {
-                confirmApplication(jobId);
-            };
-        } else {
-            Swal.fire("Error", "Unable to fetch your information.", "error");
-        }
-    });
-}
-
-function closeModal() {
-    const modal = document.getElementById('applicationModal');
-    modal.classList.remove('active');
+    console.log('Checking application for job ID:', jobId);
     
-    setTimeout(() => {
-        modal.style.display = 'none';
-    }, 300);
-}
-
-function confirmApplication(jobId) {
-    // Prevent multiple submissions
-    if (isSubmitting) {
-        return;
-    }
-    
-    isSubmitting = true;
-    const btn = document.getElementById('confirmApplyBtn');
-    const originalContent = btn.innerHTML;
-    
-    // Show loading state
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Submitting...';
-    
-    // Show loading alert
-    Swal.fire({
-        title: 'Submitting Application',
-        html: 'Please wait while we process your application and send confirmation email...',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
-    
-    fetch('action/apply-job-handler.php', {
-        method: 'POST',
-        headers: { 
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'job_id=' + jobId
-    })
-    .then(res => {
-        if (!res.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return res.json();
-    })
-    .then(data => {
-        isSubmitting = false;
-        btn.disabled = false;
-        btn.innerHTML = originalContent;
-        closeModal();
-        
-        if (data.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Application Submitted!',
-                text: data.message,
-                confirmButtonText: 'OK'
-            }).then(() => {
-                // Reload page to update saved jobs list
-                window.location.reload();
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Application Failed',
-                text: data.message,
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        isSubmitting = false;
-        btn.disabled = false;
-        btn.innerHTML = originalContent;
-        closeModal();
-        
-        Swal.fire({
-            icon: 'error',
-            title: 'Application Error',
-            text: 'Something went wrong. Please try again.',
-            confirmButtonText: 'OK'
+    // Check if already applied
+    fetch(`action/check-application.php?job_id=${jobId}`)
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.already_applied) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Already Applied',
+                    text: 'You have already applied for this job. Check your applications status in your profile.',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#3085d6'
+                });
+            } else {
+                console.log('Redirecting to application page');
+                // Redirect to the application page
+                window.location.href = `job-application.php?job_id=${jobId}`;
+            }
+        })
+        .catch(error => {
+            console.error('Error checking application status:', error);
+            // If check fails, allow proceeding to application page
+            window.location.href = `job-application.php?job_id=${jobId}`;
         });
-    });
 }
-
-// Close modal when clicking outside content
-document.getElementById('applicationModal').addEventListener('click', function(e) {
-    if (e.target === this && !isSubmitting) {
-        closeModal();
-    }
-});
-
-// Add event listener for Escape key to close modal
-document.addEventListener('keydown', function(e) {
-    const modal = document.getElementById('applicationModal');
-    if (e.key === 'Escape' && modal.classList.contains('active') && !isSubmitting) {
-        closeModal();
-    }
-});
 
         function saveJob(jobId) {
             // Check if user is logged in

@@ -1,0 +1,431 @@
+/* Notification System Styles */
+.notification-dropdown {
+    position: relative;
+    margin-right: 15px;
+    margin-left: 5px;
+}
+
+.notification-toggle {
+    position: relative;
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    color: #6b7280;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notification-toggle:hover {
+    color: #3b82f6;
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border: 2px solid white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.notification-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    min-width: 320px;
+    max-width: 400px;
+    max-height: 400px;
+    overflow: hidden;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    margin-top: 8px;
+}
+
+.notification-dropdown.active .notification-dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+}
+
+.notification-header h6 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.view-all-link {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.view-all-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.no-notifications {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+.no-notifications i {
+    font-size: 48px;
+    color: #10b981;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.no-notifications p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+}
+
+.notification-item:hover {
+    background: #f9fafb;
+}
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+.notification-content {
+    flex: 1;
+    padding-right: 15px;
+}
+
+.notification-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+    line-height: 1.4;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-status {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+.status-pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-reviewed {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-accepted {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.notification-description {
+    font-size: 12px;
+    color: #6b7280;
+    margin-bottom: 4px;
+    line-height: 1.4;
+}
+
+.notification-time {
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.notification-action {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-decoration: none;
+}
+
+.notification-action:hover {
+    background: #2563eb;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .notification-dropdown {
+        margin-right: 10px;
+    }
+    
+    .notification-toggle {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+    }
+    
+    .notification-badge {
+        min-width: 14px;
+        height: 14px;
+        font-size: 9px;
+    }
+    
+    .notification-dropdown-menu {
+        min-width: 280px;
+        max-width: 320px;
+        right: -10px;
+    }
+    
+    .notification-header {
+        padding: 12px 15px;
+    }
+    
+    .notification-item {
+        padding: 12px 15px;
+    }
+    
+    .notification-title {
+        font-size: 12px;
+    }
+    
+    .notification-description {
+        font-size: 11px;
+    }
+    
+    .notification-time {
+        font-size: 10px;
+    }
+    
+    /* Mobile Notification Section Styles */
+    .mobile-notification-section {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+    }
+    
+    .mobile-notification-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+    }
+    
+    .mobile-notification-header h6 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+    }
+    
+    .mobile-notification-badge {
+        background: #ef4444;
+        color: white;
+        border-radius: 50%;
+        font-size: 10px;
+        font-weight: bold;
+        min-width: 16px;
+        height: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+    }
+    
+    .mobile-notification-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    
+    .mobile-no-notifications {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6b7280;
+    }
+    
+    .mobile-no-notifications i {
+        font-size: 48px;
+        color: #10b981;
+        margin-bottom: 15px;
+        display: block;
+    }
+    
+    .mobile-no-notifications p {
+        margin: 0;
+        font-size: 14px;
+    }
+    
+    .mobile-notification-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        border-bottom: 1px solid #f3f4f6;
+        transition: background 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+    
+    .mobile-notification-item:hover {
+        background: #f9fafb;
+    }
+    
+    .mobile-notification-item:last-child {
+        border-bottom: none;
+    }
+    
+    .mobile-notification-content {
+        flex: 1;
+        padding-right: 15px;
+    }
+    
+    .mobile-notification-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 4px;
+        line-height: 1.4;
+    }
+    
+    .mobile-notification-description {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 4px;
+        line-height: 1.4;
+    }
+    
+    .mobile-notification-time {
+        font-size: 11px;
+        color: #9ca3af;
+    }
+    
+    .mobile-notification-action {
+        background: #3b82f6;
+        color: white;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.3s ease;
+        text-decoration: none;
+    }
+    
+    .mobile-notification-action:hover {
+        background: #2563eb;
+    }
+    
+    .mobile-notification-footer {
+        padding: 15px 20px;
+        text-align: center;
+        border-top: 1px solid #e5e7eb;
+        background: #f9fafb;
+    }
+    
+    .mobile-view-all-link {
+        color: #3b82f6;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    
+    .mobile-view-all-link:hover {
+        color: #2563eb;
+        text-decoration: underline;
+    }
+}
+
+/* Adjust logged-in-actions layout */
+.logged-in-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logged-in-actions .action-separator {
+    margin: 0 8px;
+    color: #d1d5db;
+}

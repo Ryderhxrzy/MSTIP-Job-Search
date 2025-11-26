@@ -283,18 +283,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['application_id'])) {
     exit();
 }
 
+// Check if filtering for a specific application
+$filter_application_id = isset($_GET['filter_application']) ? intval($_GET['filter_application']) : 0;
+
 // Get all applications for this company with answers
-$stmt = $conn->prepare("SELECT a.*, j.job_id, j.job_title, j.job_position, g.first_name, g.last_name, g.phone_number, g.course, g.year_graduated, g.skills, g.resume, g.linkedin_profile,
-          GROUP_CONCAT(CONCAT(jq.question_text, '|:', aa.answer_text) ORDER BY jq.question_id SEPARATOR '||') as answers
-          FROM applications a 
-          JOIN job_listings j ON a.job_id = j.job_id 
-          JOIN graduate_information g ON a.user_id = g.user_id 
-          LEFT JOIN application_answers aa ON a.application_id = aa.application_id
-          LEFT JOIN job_questions jq ON aa.question_id = jq.question_id
-          WHERE j.company_id = ?
-          GROUP BY a.application_id
-          ORDER BY a.application_date DESC");
-$stmt->bind_param("i", $company_id);
+if ($filter_application_id > 0) {
+    // Get specific application only
+    $stmt = $conn->prepare("SELECT a.*, j.job_id, j.job_title, j.job_position, g.first_name, g.last_name, g.phone_number, g.course, g.year_graduated, g.skills, g.resume, g.linkedin_profile,
+              GROUP_CONCAT(CONCAT(jq.question_text, '|:', aa.answer_text) ORDER BY jq.question_id SEPARATOR '||') as answers
+              FROM applications a 
+              JOIN job_listings j ON a.job_id = j.job_id 
+              JOIN graduate_information g ON a.user_id = g.user_id 
+              LEFT JOIN application_answers aa ON a.application_id = aa.application_id
+              LEFT JOIN job_questions jq ON aa.question_id = jq.question_id
+              WHERE j.company_id = ? AND a.application_id = ?
+              GROUP BY a.application_id
+              ORDER BY a.application_date DESC");
+    $stmt->bind_param("ii", $company_id, $filter_application_id);
+} else {
+    // Get all applications
+    $stmt = $conn->prepare("SELECT a.*, j.job_id, j.job_title, j.job_position, g.first_name, g.last_name, g.phone_number, g.course, g.year_graduated, g.skills, g.resume, g.linkedin_profile,
+              GROUP_CONCAT(CONCAT(jq.question_text, '|:', aa.answer_text) ORDER BY jq.question_id SEPARATOR '||') as answers
+              FROM applications a 
+              JOIN job_listings j ON a.job_id = j.job_id 
+              JOIN graduate_information g ON a.user_id = g.user_id 
+              LEFT JOIN application_answers aa ON a.application_id = aa.application_id
+              LEFT JOIN job_questions jq ON aa.question_id = jq.question_id
+              WHERE j.company_id = ?
+              GROUP BY a.application_id
+              ORDER BY a.application_date DESC");
+    $stmt->bind_param("i", $company_id);
+}
 $stmt->execute();
 $applications = $stmt->get_result();
 

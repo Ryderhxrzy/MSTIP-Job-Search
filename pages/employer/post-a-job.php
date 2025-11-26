@@ -43,6 +43,12 @@ if (isset($_GET['id'])) {
     if ($verify_result->num_rows > 0) {
         $is_edit = true;
         $job_data = $verify_result->fetch_assoc();
+        
+        // Load existing questions for this job
+        $questions_stmt = $conn->prepare("SELECT * FROM job_questions WHERE job_id = ? ORDER BY question_order");
+        $questions_stmt->bind_param("i", $job_id);
+        $questions_stmt->execute();
+        $existing_questions = $questions_stmt->get_result()->fetch_all(MYSQLI_ASSOC);
     } else {
         $_SESSION['job_error'] = "Job not found or you don't have permission to edit it.";
         header("Location: manage-jobs.php");
@@ -122,6 +128,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("sssssssssssii", $job_title, $job_position, $job_category, $slots_available, $salary_range, $job_description, $qualifications, $job_type_shift, $application_deadline, $contact_email, $image_url, $job_id, $company_id);
         
         if ($stmt->execute()) {
+            // Handle questions update
+            saveJobQuestions($conn, $job_id, $_POST);
             $_SESSION['job_success'] = "Job has been updated successfully.";
             header("Location: manage-jobs.php");
             exit();
@@ -136,6 +144,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_param("isssisssssss", $company_id, $job_title, $job_position, $job_category, $slots_available, $salary_range, $job_description, $qualifications, $job_type_shift, $application_deadline, $contact_email, $image_url);
 
         if ($stmt->execute()) {
+            $job_id = $conn->insert_id;
+            // Handle questions save
+            saveJobQuestions($conn, $job_id, $_POST);
             $_SESSION['job_success'] = "Job has been posted successfully.";
             header("Location: manage-jobs.php");
             exit();
@@ -146,6 +157,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+function saveJobQuestions($conn, $job_id, $post_data) {
+    // First, delete existing questions for this job (if editing)
+    $delete_stmt = $conn->prepare("DELETE FROM job_questions WHERE job_id = ?");
+    $delete_stmt->bind_param("i", $job_id);
+    $delete_stmt->execute();
+    
+    // Extract questions from POST data
+    $questions = [];
+    foreach ($post_data as $key => $value) {
+        if (strpos($key, 'question_text_') === 0 && !empty(trim($value))) {
+            $question_id = str_replace('question_text_', '', $key);
+            $question_text = trim($value);
+            $is_required = isset($post_data["question_required_$question_id"]) ? 1 : 0;
+            
+            $questions[] = [
+                'question_text' => $question_text,
+                'is_required' => $is_required,
+                'question_order' => count($questions) + 1
+            ];
+        }
+    }
+    
+    // Insert new questions
+    if (!empty($questions)) {
+        $insert_stmt = $conn->prepare("INSERT INTO job_questions (job_id, question_text, is_required, question_order) VALUES (?, ?, ?, ?)");
+        
+        foreach ($questions as $question) {
+            $insert_stmt->bind_param("isii", $job_id, $question['question_text'], $question['is_required'], $question['question_order']);
+            $insert_stmt->execute();
+        }
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -164,6 +209,174 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="shortcut icon" href="../../assets/images/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        /* Question Management Styles */
+        .card-subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            font-weight: normal;
+        }
+        
+        .question-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+        
+        .question-item:hover {
+            border-color: #d1d5db;
+            background: #f3f4f6;
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e5e7eb;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .question-number {
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+        
+        .question-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.85rem;
+            color: #6b7280;
+            cursor: pointer;
+            margin: 0;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            margin: 0;
+            transform: scale(0.9);
+        }
+        
+        .question-content {
+            padding: 15px;
+        }
+        
+        .question-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .question-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .question-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .btn-outline-primary {
+            background: transparent;
+            border: 1px solid #3b82f6;
+            color: #3b82f6;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-outline-primary:hover {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .btn-outline-secondary {
+            background: transparent;
+            border: 1px solid #6b7280;
+            color: #6b7280;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .btn-outline-secondary:hover {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .question-help {
+            margin-top: 15px;
+            padding: 12px;
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            border-radius: 4px;
+        }
+        
+        .question-help i {
+            margin-right: 6px;
+            color: #3b82f6;
+        }
+        
+        .remove-question {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .remove-question:hover {
+            background: #dc2626;
+        }
+        
+        /* Animation for new questions */
+        .question-item {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
     <?php include_once('../../includes/log-employer-header.php') ?>
@@ -306,6 +519,83 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                 </div>
 
+                <!-- Application Questions Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-question-circle"></i> Application Questions</h2>
+                        <p class="card-subtitle">Add custom questions that applicants will answer when applying for this position</p>
+                    </div>
+                    <div class="card-body">
+                        <div id="questionsContainer">
+                            <?php 
+                            $questions_to_display = $is_edit && !empty($existing_questions) ? $existing_questions : [];
+                            if (empty($questions_to_display)): 
+                            ?>
+                                <div class="question-item" data-question-id="1">
+                                    <div class="question-header">
+                                        <span class="question-number">Question 1</span>
+                                        <div class="question-controls">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="question_required_1" class="question-required" checked>
+                                                <span>Required</span>
+                                            </label>
+                                            <button type="button" class="btn btn-danger btn-sm remove-question" onclick="removeQuestion(1)" style="display: none;">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="question-content">
+                                        <input type="text" name="question_text_1" class="form-control question-input" placeholder="Enter your question here..." maxlength="255">
+                                        <small class="text-muted">Max 255 characters</small>
+                                    </div>
+                                </div>
+                            <?php 
+                            else:
+                                foreach ($questions_to_display as $index => $question):
+                                    $question_num = $index + 1;
+                            ?>
+                                <div class="question-item" data-question-id="<?php echo $question_num; ?>">
+                                    <div class="question-header">
+                                        <span class="question-number">Question <?php echo $question_num; ?></span>
+                                        <div class="question-controls">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" name="question_required_<?php echo $question_num; ?>" class="question-required" <?php echo $question['is_required'] ? 'checked' : ''; ?>>
+                                                <span>Required</span>
+                                            </label>
+                                            <button type="button" class="btn btn-danger btn-sm remove-question" onclick="removeQuestion(<?php echo $question_num; ?>)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="question-content">
+                                        <input type="text" name="question_text_<?php echo $question_num; ?>" class="form-control question-input" placeholder="Enter your question here..." maxlength="255" value="<?php echo htmlspecialchars($question['question_text']); ?>">
+                                        <small class="text-muted">Max 255 characters</small>
+                                    </div>
+                                </div>
+                            <?php 
+                                endforeach;
+                            endif;
+                            ?>
+                        </div>
+                        
+                        <div class="question-actions">
+                            <button type="button" class="btn btn-outline-primary" onclick="addQuestion()">
+                                <i class="fas fa-plus"></i> Add Question
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" onclick="clearAllQuestions()">
+                                <i class="fas fa-times"></i> Clear All
+                            </button>
+                        </div>
+                        
+                        <div class="question-help">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i>
+                                Add questions to gather specific information from applicants. You can add up to 10 questions per job posting.
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="btn-group">
                     <button type="button" class="btn btn-secondary" onclick="window.location.href='manage-jobs.php'">
                         <i class="fas fa-arrow-left"></i> Cancel
@@ -379,6 +669,138 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     confirmButtonText: 'OK'
                 });
             }
+        });
+
+        // Question Management
+        let questionCount = <?php echo $is_edit && !empty($existing_questions) ? count($existing_questions) : 1; ?>;
+        const maxQuestions = 10;
+
+        function addQuestion() {
+            if (questionCount >= maxQuestions) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Maximum Questions Reached',
+                    text: 'You can add up to 10 questions per job posting.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            questionCount++;
+            const questionsContainer = document.getElementById('questionsContainer');
+            
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question-item';
+            questionDiv.setAttribute('data-question-id', questionCount);
+            
+            questionDiv.innerHTML = `
+                <div class="question-header">
+                    <span class="question-number">Question ${questionCount}</span>
+                    <div class="question-controls">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="question_required_${questionCount}" class="question-required" checked>
+                            <span>Required</span>
+                        </label>
+                        <button type="button" class="btn btn-danger btn-sm remove-question" onclick="removeQuestion(${questionCount})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="question-content">
+                    <input type="text" name="question_text_${questionCount}" class="form-control question-input" placeholder="Enter your question here..." maxlength="255">
+                    <small class="text-muted">Max 255 characters</small>
+                </div>
+            `;
+            
+            questionsContainer.appendChild(questionDiv);
+            updateRemoveButtons();
+        }
+
+        function removeQuestion(questionId) {
+            const questionDiv = document.querySelector(`[data-question-id="${questionId}"]`);
+            if (questionDiv) {
+                questionDiv.remove();
+                updateQuestionNumbers();
+                updateRemoveButtons();
+            }
+        }
+
+        function clearAllQuestions() {
+            Swal.fire({
+                title: 'Clear All Questions?',
+                text: 'Are you sure you want to remove all questions?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Clear All',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const questionsContainer = document.getElementById('questionsContainer');
+                    questionsContainer.innerHTML = `
+                        <div class="question-item" data-question-id="1">
+                            <div class="question-header">
+                                <span class="question-number">Question 1</span>
+                                <div class="question-controls">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="question_required_1" class="question-required" checked>
+                                        <span>Required</span>
+                                    </label>
+                                    <button type="button" class="btn btn-danger btn-sm remove-question" onclick="removeQuestion(1)" style="display: none;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="question-content">
+                                <input type="text" name="question_text_1" class="form-control question-input" placeholder="Enter your question here..." maxlength="255">
+                                <small class="text-muted">Max 255 characters</small>
+                            </div>
+                        </div>
+                    `;
+                    questionCount = 1;
+                    updateRemoveButtons();
+                }
+            });
+        }
+
+        function updateQuestionNumbers() {
+            const questions = document.querySelectorAll('.question-item');
+            questionCount = questions.length;
+            
+            questions.forEach((question, index) => {
+                const questionId = index + 1;
+                const questionNumber = question.querySelector('.question-number');
+                const requiredCheckbox = question.querySelector('.question-required');
+                const questionInput = question.querySelector('.question-input');
+                const removeButton = question.querySelector('.remove-question');
+                
+                // Update question number
+                questionNumber.textContent = `Question ${questionId}`;
+                
+                // Update input names
+                requiredCheckbox.name = `question_required_${questionId}`;
+                questionInput.name = `question_text_${questionId}`;
+                
+                // Update data attribute and onclick
+                question.setAttribute('data-question-id', questionId);
+                removeButton.setAttribute('onclick', `removeQuestion(${questionId})`);
+            });
+        }
+
+        function updateRemoveButtons() {
+            const questions = document.querySelectorAll('.question-item');
+            questions.forEach((question, index) => {
+                const removeButton = question.querySelector('.remove-question');
+                if (removeButton) {
+                    removeButton.style.display = questions.length > 1 ? 'inline-block' : 'none';
+                }
+            });
+        }
+
+        // Initialize remove buttons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateRemoveButtons();
         });
     </script>
 </body>
